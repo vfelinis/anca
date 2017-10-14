@@ -1,0 +1,23 @@
+<mat-toolbar color="primary" class="mat-elevation-z6">
+
+    <button mat-button routerLink="/">
+        <h1><mat-icon>public</mat-icon>
+        ИнТЭК-Сервис</h1></button>
+
+    <!-- This fills the remaining space of the current row -->
+    <!-- <span class="fill-remaining-space"></span> -->
+    <div fxLayout="row" fxShow="false" fxShow.gt-sm>
+        <button mat-button routerLink="/">Home</button>
+        <button mat-button routerLink="/about">About</button>
+        <button mat-button routerLink="/contact">Contact</button>
+    </div>
+    <button mat-button [mat-menu-trigger-for]="menu" fxHide="false" fxHide.gt-sm>
+        <mat-icon>menu</mat-icon>
+    </button>
+
+</mat-toolbar>
+<mat-menu x-position="before" #menu="matMenu">
+    <button mat-menu-item routerLink="/">Home</button>
+    <button mat-menu-item routerLink="/about">About</button>
+    <button mat-menu-item routerLink="/contact">Contact</button>
+</mat-menu>
