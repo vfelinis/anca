@@ -2,14 +2,16 @@
 
     <button mat-button routerLink="/">
         <h1><mat-icon>public</mat-icon>
-        ИнТЭК-Сервис</h1></button>
+            {{getLocalizedString('CompanyName')}}
+        </h1>
+    </button>
 
     <!-- This fills the remaining space of the current row -->
     <!-- <span class="fill-remaining-space"></span> -->
     <div fxLayout="row" fxShow="false" fxShow.gt-sm>
-        <button mat-button routerLink="/">Home</button>
-        <button mat-button routerLink="/about">About</button>
-        <button mat-button routerLink="/contact">Contact</button>
+        <button mat-button *ngFor="let page of pages" routerLink="/{{page.pageUrl}}">
+            {{getLocalizedString(page.pageName)}}
+        </button>
     </div>
     <button mat-button [mat-menu-trigger-for]="menu" fxHide="false" fxHide.gt-sm>
         <mat-icon>menu</mat-icon>
@@ -17,7 +19,7 @@
 
 </mat-toolbar>
 <mat-menu x-position="before" #menu="matMenu">
-    <button mat-menu-item routerLink="/">Home</button>
-    <button mat-menu-item routerLink="/about">About</button>
-    <button mat-menu-item routerLink="/contact">Contact</button>
+    <button mat-menu-item *ngFor="let page of pages" routerLink="/{{page.pageUrl}}">
+        {{getLocalizedString(page.pageName)}}
+    </button>
 </mat-menu>

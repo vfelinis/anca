@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using site.Data;
 using site.Models;
 using site.Models.AccountViewModels;
 using site.Services;

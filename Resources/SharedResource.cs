@@ -10,6 +10,5 @@ namespace site
 {
     public class SharedResource
     {
-        
     }
 }

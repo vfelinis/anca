@@ -1,8 +1,9 @@
-<div id="primary-header" class="mat-h2">{{url ? url : 'home'}}</div>
+<div id="primary-header" class="mat-h2">{{getLocalizedString(page.pageName)}}</div>
 <div id="content" fxLayout fxLayoutAlign="center" fxLayoutGap="0">
   <div class="item" fxFlex.gt-md="80%">
     <mat-card>
-      {{url}}
+      <h1>{{content.title}}</h1>
+      <p>{{content.body}}</p>
     </mat-card>
   </div>
 </div>

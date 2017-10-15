@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using site.Data;
-using site.Models;
 using site.Services;
 using Microsoft.AspNetCore.Http;
 using System.Globalization;
@@ -19,6 +18,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.IO;
+using Microsoft.AspNetCore.ResponseCompression;
 
 namespace site
 {
@@ -34,6 +34,17 @@ namespace site
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Optimal);
+
+            services.AddResponseCompression(options =>
+            {
+                options.MimeTypes = new[]
+                {
+                    "application/javascript"
+                };
+                options.EnableForHttps = true;
+            });
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -56,14 +67,14 @@ namespace site
                             ValidateIssuer = true,
                             // строка, представляющая издателя
                             ValidIssuer = AuthOptions.ISSUER,
- 
+
                             // будет ли валидироваться потребитель токена
                             ValidateAudience = true,
                             // установка потребителя токена
                             ValidAudience = AuthOptions.AUDIENCE,
                             // будет ли валидироваться время существования
                             ValidateLifetime = true,
- 
+
                             // установка ключа безопасности
                             IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
                             // валидация ключа безопасности
@@ -72,9 +83,10 @@ namespace site
                     });
 
             services.AddMvc()
-                .AddDataAnnotationsLocalization(options => {
+                .AddDataAnnotationsLocalization(options =>
+                {
                     options.DataAnnotationLocalizerProvider = (type, factory) =>
-                        factory.Create(typeof(SharedResource));  
+                        factory.Create(typeof(SharedResource));
                 })
                 .AddViewLocalization();
         }
@@ -107,6 +119,8 @@ namespace site
             /*var options = new RewriteOptions()
                 .AddRewrite(@".*", "index", skipRemainingRules: false);
             app.UseRewriter(options);*/
+            
+            app.UseResponseCompression();
 
             app.UseDefaultFiles();
 
