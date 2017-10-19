@@ -19,6 +19,7 @@ import { Page } from '../../store/Pages';
 export class ContentComponent implements OnInit {
   private content: ContentState;
   private page: Page;
+  private isEdit = false;
   constructor(
     private store: Store<ApplicationState>,
     private contentService: ContentService,
@@ -28,6 +29,19 @@ export class ContentComponent implements OnInit {
     store.subscribe(s => this.content = s.contentState);
   }
 
+  public options: Object = {
+    placeholderText: 'Edit Your Content Here!',
+    charCounterCount: false,
+    imageInsertButtons: ['imageBack', '|', 'imageByURL'],
+    videoInsertButtons: ['videoBack', '|', 'videoByURL'],
+    events : {
+      'froalaEditor.file.beforeUpload' : function(e, editor, response) {
+        alert('File upload is disabled');
+        return false;
+      }
+    }
+  };
+
   ngOnInit() {
     this.page = this.pageService.getPageByCurrentRoute();
     this.contentService.fetchContent(this.page.id);
@@ -35,5 +49,9 @@ export class ContentComponent implements OnInit {
 
   getLocalizedString(key: string): string {
     return this.localizationService.getData(key);
+  }
+
+  editToogle() {
+    this.isEdit = !this.isEdit;
   }
 }

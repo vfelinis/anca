@@ -2,9 +2,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
+import { FormsModule } from '@angular/forms';
 
-import { MatMenuModule, MatButtonModule, MatIconModule, MatCardModule, MatToolbarModule } from '@angular/material';
+import { MatMenuModule, MatButtonModule, MatIconModule, MatCardModule, MatToolbarModule, MatDialogModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 
 import { StoreModule } from '@ngrx/store';
 import {
@@ -36,6 +38,7 @@ const initState = (window as any).initialReduxState as ApplicationState;
     BrowserModule,
     BrowserAnimationsModule,
     HttpModule,
+    FormsModule,
     AppRoutingModule,
 
     StoreModule.forRoot(reducers, {initialState: initState}),
@@ -47,7 +50,10 @@ const initState = (window as any).initialReduxState as ApplicationState;
     MatIconModule,
     MatCardModule,
     MatToolbarModule,
-    FlexLayoutModule
+    MatDialogModule,
+    FlexLayoutModule,
+    FroalaEditorModule.forRoot(),
+    FroalaViewModule.forRoot()
   ],
   providers: [
     { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },

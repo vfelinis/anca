@@ -1,9 +1,21 @@
-<div id="primary-header" class="mat-h2">{{getLocalizedString(page.pageName)}}</div>
+<div id="primary-header" class="mat-h1">{{getLocalizedString(page.pageName)}}</div>
 <div id="content" fxLayout fxLayoutAlign="center" fxLayoutGap="0">
   <div class="item" fxFlex.gt-md="80%">
-    <mat-card>
-      <h1>{{content.title}}</h1>
-      <p>{{content.body}}</p>
+    <mat-card fxLayout="column" fxLayoutGap="10px">
+      <div *ngIf="isEdit; then editor else view"></div>
+      <ng-template #editor>
+        <div fxFlexAlign="end">
+            <button (click)="editToogle()" mat-fab color="primary">{{getLocalizedString('Save')}}</button>
+            <button (click)="editToogle()" mat-fab color="warn">{{getLocalizedString('Cancel')}}</button>
+        </div>
+        <div [froalaEditor]="options" [(froalaModel)]="content.body"></div>
+      </ng-template>
+      <ng-template #view>
+        <div fxFlexAlign="end">
+            <button (click)="editToogle()" mat-fab color="primary">{{getLocalizedString('Edit')}}</button>
+        </div>
+        <div [froalaView]="content.body"></div>
+      </ng-template>
     </mat-card>
   </div>
 </div>
