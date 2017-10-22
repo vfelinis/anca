@@ -5,13 +5,18 @@ import { ContentComponent } from './components/content/content.component';
 import { LoginComponent } from './components/login/login.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 
-const routes: Routes = [
-  { path: '',  component: ContentComponent },
-  { path: 'about',  component: ContentComponent },
-  { path: 'contact',  component: ContentComponent },
-  { path: 'login',  component: LoginComponent },
-  { path: '**', component: NotFoundComponent }
-];
+import { ApplicationState } from './store/index';
+
+const initState = (window as any).initialReduxState as ApplicationState;
+
+const routes: Routes = [];
+
+if (initState && initState.pagesState && initState.pagesState.pages instanceof Array) {
+  initState.pagesState.pages.forEach(p => routes.push({ path: p.pageUrl,  component: ContentComponent }));
+}
+
+routes.push({ path: 'login',  component: LoginComponent });
+routes.push({ path: '**', component: NotFoundComponent });
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

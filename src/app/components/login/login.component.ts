@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { LocalizationService } from '../../services/localization/localization.service';
 
 @Component({
@@ -9,12 +9,18 @@ import { LocalizationService } from '../../services/localization/localization.se
   providers: [LocalizationService]
 })
 export class LoginComponent implements OnInit {
-  private email = new FormControl('', [Validators.required, Validators.email]);
-  private password = new FormControl('', [Validators.required]);
+  private loginForm: FormGroup;
+  private email: FormControl = new FormControl('', [Validators.required, Validators.email]);
+  private password: FormControl = new FormControl('', [Validators.required]);
   private hide = true;
   constructor(
     private localizationService: LocalizationService
-  ) { }
+  ) {
+    this.loginForm = new FormGroup({
+      email: this.email,
+      password: this.password
+    });
+  }
 
   ngOnInit() {
   }
@@ -30,7 +36,12 @@ export class LoginComponent implements OnInit {
   }
 
   getPasswordErrorMessage() {
-    return this.email.hasError('required') ? 'You must enter a value' : '';
+    return this.password.hasError('required') ? 'You must enter a value' : '';
   }
 
+  submit() {
+    if (this.loginForm.status === 'VALID') {
+      console.log(this.email.value);
+    }
+  }
 }
