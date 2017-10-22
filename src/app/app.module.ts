@@ -2,9 +2,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { MatMenuModule, MatButtonModule, MatIconModule, MatCardModule, MatToolbarModule, MatDialogModule } from '@angular/material';
+import { MatMenuModule, MatButtonModule, MatIconModule, MatCardModule,
+  MatToolbarModule, MatDialogModule, MatFormFieldModule, MatInputModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 
@@ -21,6 +22,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './components/nav/nav.component';
 import { ContentComponent } from './components/content/content.component';
+import { LoginComponent } from './components/login/login.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 
 import { environment } from '../environments/environment';
@@ -32,6 +34,7 @@ const initState = (window as any).initialReduxState as ApplicationState;
     AppComponent,
     NavComponent,
     ContentComponent,
+    LoginComponent,
     NotFoundComponent
   ],
   imports: [
@@ -39,6 +42,7 @@ const initState = (window as any).initialReduxState as ApplicationState;
     BrowserAnimationsModule,
     HttpModule,
     FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
 
     StoreModule.forRoot(reducers, {initialState: initState}),
@@ -51,6 +55,8 @@ const initState = (window as any).initialReduxState as ApplicationState;
     MatCardModule,
     MatToolbarModule,
     MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
     FlexLayoutModule,
     FroalaEditorModule.forRoot(),
     FroalaViewModule.forRoot()

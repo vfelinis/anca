@@ -5,28 +5,30 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { ApplicationState } from '../../store';
 import { ContentState, contentActionCreators } from '../../store/Content';
+import { Page } from '../../store/Pages';
+
 import { LocalizationService } from '../../services/localization/localization.service';
 import { ContentService } from '../../services/content/content.service';
 import { PageService } from '../../services/page/page.service';
-import { Page } from '../../store/Pages';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-content',
   templateUrl: './content.component.html',
   styleUrls: ['./content.component.less'],
-  providers: [LocalizationService, ContentService, PageService]
+  providers: [LocalizationService, ContentService, PageService, UserService]
 })
 export class ContentComponent implements OnInit {
   private content: ContentState;
   private page: Page;
   private isEdit = false;
   constructor(
-    private store: Store<ApplicationState>,
     private contentService: ContentService,
     private pageService: PageService,
-    private localizationService: LocalizationService
+    private localizationService: LocalizationService,
+    private userService: UserService
   ) {
-    store.subscribe(s => this.content = s.contentState);
+     contentService.content$.subscribe(c => this.content = c);
   }
 
   public options: Object = {

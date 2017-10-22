@@ -26,13 +26,11 @@ namespace site.ApiControllers
         ContentViewModel model = null;
         if(pageId == 1){
           model = new ContentViewModel{
-            Title = "Домашняя страница интэк",
             Body = "Текс домашней страницы"
           };
         }
         if(pageId == 2){
           model = new ContentViewModel{
-            Title = "Контакты интэк",
             Body = "Наши контакты"
           };
         }

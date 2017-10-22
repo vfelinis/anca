@@ -1,25 +1,60 @@
 <mat-toolbar color="primary" class="mat-elevation-z6">
 
     <button mat-button routerLink="/">
-        <h1><mat-icon>public</mat-icon>
-            {{getLocalizedString('CompanyName')}}
+        <h1>
+            <mat-icon>public</mat-icon>
+            {{getLocalizedString('Company Name')}}
         </h1>
     </button>
 
     <!-- This fills the remaining space of the current row -->
     <!-- <span class="fill-remaining-space"></span> -->
-    <div fxLayout="row" fxShow="false" fxShow.gt-sm>
-        <button mat-button *ngFor="let page of pages" routerLink="/{{page.pageUrl}}">
+    <div fxLayout="row" fxShow="false" fxShow.gt-sm class="fill-remaining-space">
+        <button mat-button *ngFor="let page of pages" routerLink="{{page.pageUrl}}">
             {{getLocalizedString(page.pageName)}}
         </button>
+        <div *ngIf="user; then profile else login"></div>
+        <ng-template #profile>
+            <div fxLayout="column" fxFlex.gt-sm="100%">
+                <button mat-button [mat-menu-trigger-for]="userMenu" fxFlexAlign="end">
+                    <mat-icon>person</mat-icon>
+                    {{user.username}}
+                    <mat-icon>more vert</mat-icon>
+                </button>
+            </div>
+        </ng-template>
+        <ng-template #login>
+            <div fxLayout="column" fxFlex.gt-sm="100%">
+                <button mat-button routerLink="login" fxFlexAlign="end">
+                    <mat-icon>input</mat-icon>
+                    {{getLocalizedString('Login')}}
+                </button>
+            </div>
+        </ng-template>
     </div>
-    <button mat-button [mat-menu-trigger-for]="menu" fxHide="false" fxHide.gt-sm>
-        <mat-icon>menu</mat-icon>
-    </button>
+    <div fxLayout="row-reverse" fxHide="false" fxHide.gt-sm class="fill-remaining-space">
+        <button mat-button [mat-menu-trigger-for]="menu">
+            <mat-icon>menu</mat-icon>
+        </button>
+    </div>
 
 </mat-toolbar>
 <mat-menu x-position="before" #menu="matMenu">
-    <button mat-menu-item *ngFor="let page of pages" routerLink="/{{page.pageUrl}}">
+    <button mat-menu-item *ngFor="let page of pages" routerLink="{{page.pageUrl}}">
         {{getLocalizedString(page.pageName)}}
     </button>
+    <div *ngIf="user; then profileMenu else loginMenu"></div>
+    <ng-template #profileMenu>
+            <button mat-button [mat-menu-trigger-for]="userMenu">
+                <mat-icon>person</mat-icon>
+                {{user.username}}
+                <mat-icon>more vert</mat-icon>
+            </button>
+    </ng-template>
+    <ng-template #loginMenu>
+            <button mat-button routerLink="login">
+                <mat-icon>input</mat-icon>
+                {{getLocalizedString('Login')}}
+            </button>
+    </ng-template>
 </mat-menu>

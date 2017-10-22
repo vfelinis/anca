@@ -1,6 +1,6 @@
 <div id="primary-header" class="mat-h1">{{getLocalizedString(page.pageName)}}</div>
-<div id="content" fxLayout fxLayoutAlign="center" fxLayoutGap="0">
-  <div class="item" fxFlex.gt-md="80%">
+<div id="content" fxLayout fxLayoutAlign="center">
+  <div fxFlex.gt-md="80%">
     <mat-card fxLayout="column" fxLayoutGap="10px">
       <div *ngIf="isEdit; then editor else view"></div>
       <ng-template #editor>

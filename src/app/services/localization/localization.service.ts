@@ -11,6 +11,6 @@ export class LocalizationService {
     store.subscribe(s => this.locale = s.localeState);
   }
   getData(key: string): string {
-    return this.locale[key] ? this.locale[key] : key;
+    return this.locale[key] ? this.locale[key] : `${key}^`;
   }
 }

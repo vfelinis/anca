@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import {Http} from '@angular/http';
-import {Response} from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import { Http } from '@angular/http';
+import { Response } from '@angular/http';
 import { ApplicationState } from '../../store';
-import { contentActionCreators } from '../../store/Content';
+import { ContentState, contentActionCreators } from '../../store/Content';
 
 @Injectable()
 export class ContentService {
+  public content$: Observable<ContentState>;
   constructor(
     private store: Store<ApplicationState>,
     private http: Http
   ) {
+    this.content$ = store.select(s => s.contentState);
   }
 
   fetchContent(pageId: number) {
