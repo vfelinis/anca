@@ -43,7 +43,7 @@ namespace site.Controllers
             _urlEncoder = urlEncoder;
         }
 
-        [TempData]
+        /*[TempData]
         public string StatusMessage { get; set; }
 
         [HttpGet]
@@ -463,7 +463,7 @@ namespace site.Controllers
             _logger.LogInformation("User with ID {UserId} has generated new 2FA recovery codes.", user.Id);
 
             return View(model);
-        }
+        }*/
 
         #region Helpers
 

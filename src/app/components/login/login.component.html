@@ -1,20 +1,23 @@
-<div id="primary-header" class="mat-h1">{{getLocalizedString('Login')}}</div>
+<div id="primary-header" class="mat-h1">{{getLocalizedString('Login') | async}}</div>
 <div id="content" fxLayout fxLayoutAlign="center">
   <div fxFlex.gt-sm="50%">
     <mat-card>
       <form [formGroup]="loginForm" (ngSubmit)="submit()" novalidate fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="stretch">
         <mat-form-field>
-          <input matInput placeholder="{{getLocalizedString('Enter your email')}}" [formControl]="email">
-          <mat-error *ngIf="email.invalid">{{getLocalizedString(getEmailErrorMessage())}}</mat-error>
+          <input matInput placeholder="{{getLocalizedString('Enter your email') | async}}" [formControl]="email">
+          <mat-error *ngIf="email.invalid">{{getLocalizedString(getEmailErrorMessage()) | async}}}</mat-error>
         </mat-form-field>
         <mat-form-field>
-          <input matInput placeholder="{{getLocalizedString('Enter your password')}}" [formControl]="password" [type]="hide ? 'password' : 'text'">
+          <input matInput placeholder="{{getLocalizedString('Enter your password') | async}}" [formControl]="password" [type]="hide ? 'password' : 'text'">
           <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
-          <mat-error *ngIf="password.invalid">{{getLocalizedString(getPasswordErrorMessage())}}</mat-error>
+          <mat-error *ngIf="password.invalid">{{getLocalizedString(getPasswordErrorMessage()) | async}}</mat-error>
         </mat-form-field>
         <div>
+          <mat-checkbox formControlName="rememberMe" color="primary">{{getLocalizedString('Remember me') | async}}</mat-checkbox>
+        </div>
+        <div>
           <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
-            {{getLocalizedString('Send')}}
+            {{getLocalizedString('Send') | async}}
           </button>
         </div>
       </form>

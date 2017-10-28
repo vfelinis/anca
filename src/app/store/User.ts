@@ -7,7 +7,7 @@ export interface UserState {
     id: string;
     email: string;
     username: string;
-    role: string;
+    role: string[];
     language: string;
     token: string;
 }

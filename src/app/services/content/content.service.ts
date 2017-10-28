@@ -8,12 +8,13 @@ import { ContentState, contentActionCreators } from '../../store/Content';
 
 @Injectable()
 export class ContentService {
-  public content$: Observable<ContentState>;
   constructor(
     private store: Store<ApplicationState>,
     private http: Http
-  ) {
-    this.content$ = store.select(s => s.contentState);
+  ) { }
+
+  getContent(): Observable<ContentState> {
+    return this.store.select(s => s.contentState);
   }
 
   fetchContent(pageId: number) {

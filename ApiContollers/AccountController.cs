@@ -25,17 +25,20 @@ namespace site.ApiControllers
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
             ILogger<AccountController> logger)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
@@ -44,15 +47,17 @@ namespace site.ApiControllers
         [TempData]
         public string ErrorMessage { get; set; }
 
-        [HttpPost("/token")]
+        [HttpPost("api/account/login")]
         [AllowAnonymous]
-        public async Task Token()
+        public async Task Login([FromBody]LoginViewModel model)
         {
-            var email = Request.Form["email"];
-            var password = Request.Form["password"];
+            if(model == null){
+                Response.StatusCode = 400;
+                await Response.WriteAsync("email/password is empty");
+            }
 
-            var user = await _userManager.FindByEmailAsync(email);
-            if (!await _userManager.CheckPasswordAsync(user, password))
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (!await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 Response.StatusCode = 400;
                 await Response.WriteAsync("Invalid email or password.");
@@ -72,8 +77,12 @@ namespace site.ApiControllers
              
             var response = new
             {
-                access_token = encodedJwt,
-                username = user.UserName
+                id = user.Id,
+                email = user.Email,
+                username = user.UserName,
+                role = await _userManager.GetRolesAsync(user),
+                language = "ru",
+                token = encodedJwt
             };
  
             // сериализация ответа
@@ -81,7 +90,7 @@ namespace site.ApiControllers
             await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
         }
 
-        [HttpGet]
+        /*[HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
@@ -476,7 +485,7 @@ namespace site.ApiControllers
         public IActionResult AccessDenied()
         {
             return View();
-        }
+        }*/
 
         #region Helpers
 

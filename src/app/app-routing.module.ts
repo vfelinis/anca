@@ -5,6 +5,8 @@ import { ContentComponent } from './components/content/content.component';
 import { LoginComponent } from './components/login/login.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 
+import { LoginGuard } from './guards/login/login.guard';
+
 import { ApplicationState } from './store/index';
 
 const initState = (window as any).initialReduxState as ApplicationState;
@@ -15,7 +17,7 @@ if (initState && initState.pagesState && initState.pagesState.pages instanceof A
   initState.pagesState.pages.forEach(p => routes.push({ path: p.pageUrl,  component: ContentComponent }));
 }
 
-routes.push({ path: 'login',  component: LoginComponent });
+routes.push({ path: 'login',  component: LoginComponent, canActivate: [LoginGuard] });
 routes.push({ path: '**', component: NotFoundComponent });
 
 @NgModule({

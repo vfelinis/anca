@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+
 import { LocalizationService } from '../../services/localization/localization.service';
 
 @Component({
@@ -14,7 +16,7 @@ export class NotFoundComponent implements OnInit {
   ngOnInit() {
   }
 
-  getLocalizedString(key: string): string {
-    return this.localizationService.getData(key);
+  getLocalizedString(key: string): Observable<string> {
+    return this.localizationService.getLocalizedString(key);
   }
 }

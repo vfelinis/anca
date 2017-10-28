@@ -1,32 +1,41 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
+
 import { LocalizationService } from '../../services/localization/localization.service';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.less'],
-  providers: [LocalizationService]
+  providers: [LocalizationService, UserService]
 })
 export class LoginComponent implements OnInit {
   private loginForm: FormGroup;
-  private email: FormControl = new FormControl('', [Validators.required, Validators.email]);
-  private password: FormControl = new FormControl('', [Validators.required]);
+  private email: FormControl;
+  private password: FormControl;
+  private rememberMe: FormControl;
   private hide = true;
   constructor(
-    private localizationService: LocalizationService
+    private localizationService: LocalizationService,
+    private userService: UserService
   ) {
+    this.email = new FormControl('', [Validators.required, Validators.email]);
+    this.password = new FormControl('', [Validators.required]);
+    this.rememberMe = new FormControl(false);
     this.loginForm = new FormGroup({
       email: this.email,
-      password: this.password
+      password: this.password,
+      rememberMe: this.rememberMe
     });
   }
 
   ngOnInit() {
   }
 
-  getLocalizedString(key: string): string {
-    return this.localizationService.getData(key);
+  getLocalizedString(key: string): Observable<string> {
+    return this.localizationService.getLocalizedString(key);
   }
 
   getEmailErrorMessage() {
@@ -41,7 +50,7 @@ export class LoginComponent implements OnInit {
 
   submit() {
     if (this.loginForm.status === 'VALID') {
-      console.log(this.email.value);
+      this.userService.login(this.email.value, this.password.value, this.rememberMe.value);
     }
   }
 }
