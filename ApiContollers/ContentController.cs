@@ -26,12 +26,12 @@ namespace site.ApiControllers
         ContentViewModel model = null;
         if(pageId == 1){
           model = new ContentViewModel{
-            Body = "Текс домашней страницы"
+            Text = "Текс домашней страницы"
           };
         }
         if(pageId == 2){
           model = new ContentViewModel{
-            Body = "Наши контакты"
+            Text = "Наши контакты"
           };
         }
         return Ok(model);

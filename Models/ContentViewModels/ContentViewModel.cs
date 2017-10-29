@@ -5,7 +5,7 @@ namespace site.Models.ContentViewModels
 {
     public class ContentViewModel
     {
-        [JsonProperty("body")]
-        public string Body { get; set; }
+        [JsonProperty("text")]
+        public string Text { get; set; }
     }
 }

@@ -3,17 +3,16 @@
     <button mat-button routerLink="/">
         <h1>
             <mat-icon>public</mat-icon>
-            {{getLocalizedString('Company Name') | async}}
+            <span [appLocalize]="'Company Name'"></span>
         </h1>
     </button>
 
     <!-- This fills the remaining space of the current row -->
     <!-- <span class="fill-remaining-space"></span> -->
     <div fxLayout="row" fxShow="false" fxShow.gt-sm class="fill-remaining-space">
-        <button mat-button *ngFor="let page of pages" routerLink="{{page.pageUrl}}">
-            {{getLocalizedString(page.pageName) | async}}
+        <button mat-button *ngFor="let page of pages" routerLink="{{page.pageUrl}}" [appLocalize]="page.pageName">
         </button>
-        <div *ngIf="user; then profile else login"></div>
+        <div *ngIf="user.email; then profile else login"></div>
         <ng-template #profile>
             <div fxLayout="column" fxFlex.gt-sm="100%">
                 <button mat-button [mat-menu-trigger-for]="userMenu" fxFlexAlign="end">
@@ -27,7 +26,7 @@
             <div fxLayout="column" fxFlex.gt-sm="100%">
                 <button mat-button routerLink="login" fxFlexAlign="end">
                     <mat-icon>input</mat-icon>
-                    {{getLocalizedString('Login') | async}}
+                    <span [appLocalize]="'Login'"></span>
                 </button>
             </div>
         </ng-template>
@@ -40,26 +39,23 @@
 
 </mat-toolbar>
 <mat-menu #menu="matMenu">
-    <button mat-menu-item *ngFor="let page of pages" routerLink="{{page.pageUrl}}">
-        {{getLocalizedString(page.pageName) | async}}
+    <button mat-menu-item *ngFor="let page of pages" routerLink="{{page.pageUrl}}" [appLocalize]="page.pageName">
     </button>
-    <div *ngIf="user; then profileMenu else loginMenu"></div>
+    <div *ngIf="user.email; then profileMenu else loginMenu"></div>
     <ng-template #profileMenu>
             <button mat-menu-item [mat-menu-trigger-for]="userMenu">
-                <mat-icon>person</mat-icon>
                 {{user.username}}
             </button>
     </ng-template>
     <ng-template #loginMenu>
             <button mat-menu-item routerLink="login">
                 <mat-icon>input</mat-icon>
-                {{getLocalizedString('Login') | async}}
+                <span [appLocalize]="'Login'"></span>
             </button>
     </ng-template>
 </mat-menu>
 
 <mat-menu #userMenu="matMenu">
-    <button mat-menu-item (click)="logout()">
-        {{getLocalizedString('Logout') | async}}
-    </button>
+    <button *ngIf="isAdmin" mat-menu-item routerLink="admin" [appLocalize]="'Admin Panel'"></button>
+    <button mat-menu-item (click)="logout()" [appLocalize]="'Logout'"></button>
 </mat-menu>

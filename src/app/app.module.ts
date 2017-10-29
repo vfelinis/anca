@@ -24,9 +24,13 @@ import { AppComponent } from './app.component';
 import { NavComponent } from './components/nav/nav.component';
 import { ContentComponent } from './components/content/content.component';
 import { LoginComponent } from './components/login/login.component';
+import { AdminComponent } from './components/admin/admin.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 
+import { LocalizeDirective } from './directives/localize/localize.directive';
+
 import { LoginGuard } from './guards/login/login.guard';
+import { AdminGuard } from './guards/admin/admin.guard';
 
 import { environment } from '../environments/environment';
 
@@ -38,7 +42,9 @@ const initState = (window as any).initialReduxState as ApplicationState;
     NavComponent,
     ContentComponent,
     LoginComponent,
-    NotFoundComponent
+    AdminComponent,
+    NotFoundComponent,
+    LocalizeDirective
   ],
   imports: [
     BrowserModule,
@@ -67,6 +73,7 @@ const initState = (window as any).initialReduxState as ApplicationState;
   ],
   providers: [
     LoginGuard,
+    AdminGuard,
     { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
   ],
   bootstrap: [AppComponent]

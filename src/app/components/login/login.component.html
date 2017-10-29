@@ -1,23 +1,28 @@
-<div id="primary-header" class="mat-h1">{{getLocalizedString('Login') | async}}</div>
+<div id="primary-header" class="mat-h1">
+  <span [appLocalize]="'Login'"></span>
+</div>
 <div id="content" fxLayout fxLayoutAlign="center">
   <div fxFlex.gt-sm="50%">
     <mat-card>
       <form [formGroup]="loginForm" (ngSubmit)="submit()" novalidate fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="stretch">
         <mat-form-field>
-          <input matInput placeholder="{{getLocalizedString('Enter your email') | async}}" [formControl]="email">
-          <mat-error *ngIf="email.invalid">{{getLocalizedString(getEmailErrorMessage()) | async}}}</mat-error>
+          <input matInput [formControl]="email">
+          <mat-placeholder [appLocalize]="'Enter your email'"></mat-placeholder>
+          <mat-error *ngIf="email.invalid" [appLocalize]="getEmailErrorMessage()"></mat-error>
         </mat-form-field>
         <mat-form-field>
-          <input matInput placeholder="{{getLocalizedString('Enter your password') | async}}" [formControl]="password" [type]="hide ? 'password' : 'text'">
+          <input matInput [formControl]="password" [type]="hide ? 'password' : 'text'">
+          <mat-placeholder [appLocalize]="'Enter your password'"></mat-placeholder>
           <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
-          <mat-error *ngIf="password.invalid">{{getLocalizedString(getPasswordErrorMessage()) | async}}</mat-error>
+          <mat-error *ngIf="password.invalid" [appLocalize]="getPasswordErrorMessage()"></mat-error>
         </mat-form-field>
         <div>
-          <mat-checkbox formControlName="rememberMe" color="primary">{{getLocalizedString('Remember me') | async}}</mat-checkbox>
+          <mat-checkbox formControlName="rememberMe" color="primary">
+            <span [appLocalize]="'Remember me'"></span>
+          </mat-checkbox>
         </div>
         <div>
-          <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
-            {{getLocalizedString('Send') | async}}
+          <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid" [appLocalize]="'Send'">
           </button>
         </div>
       </form>

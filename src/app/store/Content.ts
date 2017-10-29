@@ -4,7 +4,7 @@ import { Action, ActionReducer } from '@ngrx/store';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface ContentState {
-    body: string;
+    text: string;
 }
 
 // -----------------
@@ -26,12 +26,12 @@ type KnownAction = SetContentAction;
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const contentActionCreators = {
-    setContent: (content) => <SetContentAction>{ type: 'SET_CONTENT', payload: content }
+    setContent: (contentState: ContentState) => <SetContentAction>{ type: 'SET_CONTENT', payload: contentState }
 };
 
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
-const unloadedState: ContentState = { body: '' };
+const unloadedState: ContentState = { text: '' };
 
 export function contentReducer(state: ContentState, action: KnownAction): ContentState {
     switch (action.type) {

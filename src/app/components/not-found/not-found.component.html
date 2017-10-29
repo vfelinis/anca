@@ -1,8 +1,10 @@
-<div id="primary-header" class="mat-h2">{{getLocalizedString('Error') | async}}</div>
+<div id="primary-header" class="mat-h2">
+  <span [appLocalize]="'Error'"></span>
+</div>
 <div id="content" fxLayout fxLayoutAlign="center" fxLayoutGap="0">
   <div class="item" fxFlex.gt-md="80%">
     <mat-card>
-      {{getLocalizedString('Not Found') | async}}
+      <span [appLocalize]="'Not Found'"></span>
     </mat-card>
   </div>
 </div>

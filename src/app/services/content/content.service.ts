@@ -19,8 +19,14 @@ export class ContentService {
 
   fetchContent(pageId: number) {
     this.http.get(`api/contents/?pageId=${ pageId }`).subscribe((resp: Response) => {
-      const content = resp.json();
-      this.store.dispatch(contentActionCreators.setContent(content));
-    });
+        const content = resp.json();
+        this.store.dispatch(contentActionCreators.setContent(content));
+      },
+      (error: any) => console.log(error)
+    );
+  }
+
+  saveContent(text: string) {
+    this.store.dispatch(contentActionCreators.setContent({ text: text }));
   }
 }

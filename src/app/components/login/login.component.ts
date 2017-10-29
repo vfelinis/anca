@@ -18,7 +18,6 @@ export class LoginComponent implements OnInit {
   private rememberMe: FormControl;
   private hide = true;
   constructor(
-    private localizationService: LocalizationService,
     private userService: UserService
   ) {
     this.email = new FormControl('', [Validators.required, Validators.email]);
@@ -32,10 +31,6 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-  }
-
-  getLocalizedString(key: string): Observable<string> {
-    return this.localizationService.getLocalizedString(key);
   }
 
   getEmailErrorMessage() {

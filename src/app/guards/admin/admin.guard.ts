@@ -8,7 +8,7 @@ import { ApplicationState } from '../../store';
 import { UserState } from '../../store/User';
 
 @Injectable()
-export class LoginGuard implements CanActivate {
+export class AdminGuard implements CanActivate {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
   private user: UserState;
   constructor(private store: Store<ApplicationState>, private router: Router) {
@@ -18,13 +18,13 @@ export class LoginGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-      this.ngUnsubscribe.next();
-      this.ngUnsubscribe.complete();
-      if (!this.user.email) {
-        return true;
-      } else {
-        this.router.navigate(['']);
-        return false;
-      }
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+    if (this.user.role.some(r => r === 'admin')) {
+      return true;
+    } else {
+      this.router.navigate(['']);
+      return false;
+    }
   }
 }

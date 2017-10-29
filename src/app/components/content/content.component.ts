@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/takeUntil';
 import { Subject } from 'rxjs/Subject';
@@ -21,20 +21,21 @@ import { UserService } from '../../services/user/user.service';
 export class ContentComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
   private content: ContentState;
+  private editableText: string;
   private page: Page;
+  private isAdmin: boolean;
   private isEdit = false;
   constructor(
     private contentService: ContentService,
     private pageService: PageService,
-    private localizationService: LocalizationService,
     private userService: UserService
   ) {
-     contentService.getContent().takeUntil(this.ngUnsubscribe).subscribe(c => this.content = c);
-     pageService.getPageByCurrentRoute().takeUntil(this.ngUnsubscribe).subscribe(p => this.page = p);
+    this.contentService.getContent().takeUntil(this.ngUnsubscribe).subscribe(c => this.content = c);
+    this.pageService.getPageByCurrentRoute().takeUntil(this.ngUnsubscribe).subscribe(p => this.page = p);
+    this.userService.isAdmin().takeUntil(this.ngUnsubscribe).subscribe(a => this.isAdmin = a);
   }
 
   public options: Object = {
-    placeholderText: 'Edit Your Content Here!',
     charCounterCount: false,
     imageInsertButtons: ['imageBack', '|', 'imageByURL'],
     videoInsertButtons: ['videoBack', '|', 'videoByURL'],
@@ -55,15 +56,17 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
-  getLocalizedString(key: string): Observable<string> {
-    return this.localizationService.getLocalizedString(key);
+  onEdit() {
+    this.isEdit = true;
+    this.editableText = this.content.text;
   }
 
-  editToogle() {
-    this.isEdit = !this.isEdit;
+  cancelEdit() {
+    this.isEdit = false;
   }
 
-  hasEditingRight(): Observable<boolean> {
-    return this.userService.isAdmin();
+  saveChanges() {
+    this.contentService.saveContent(this.editableText);
+    this.isEdit = false;
   }
 }

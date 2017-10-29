@@ -11,12 +11,8 @@ import { LocalizationService } from '../../services/localization/localization.se
 })
 export class NotFoundComponent implements OnInit {
 
-  constructor(private localizationService: LocalizationService) { }
+  constructor() { }
 
   ngOnInit() {
-  }
-
-  getLocalizedString(key: string): Observable<string> {
-    return this.localizationService.getLocalizedString(key);
   }
 }

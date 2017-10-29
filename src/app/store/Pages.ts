@@ -7,15 +7,7 @@ export interface PagesState {
     pages: Page[];
 }
 
-export interface Page extends BasePage {
-    subPages: SubPage[];
-}
-
-export interface SubPage extends BasePage {
-
-}
-
-interface BasePage {
+export interface Page {
     id: number;
     pageName: string;
     pageUrl: string;
@@ -33,7 +25,7 @@ interface RequestPagesAction {
 
 interface ReceivePagesAction {
     type: 'RECEIVE_PAGES';
-    payload: Page[];
+    payload: PagesState;
 }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
@@ -46,7 +38,7 @@ type KnownAction = RequestPagesAction | ReceivePagesAction;
 
 export const pagesActionCreators = {
     requestPages: () => <RequestPagesAction>{ type: 'REQUEST_PAGES' },
-    receivePages: (pages) => <ReceivePagesAction>{ type: 'RECEIVE_PAGES', payload: pages },
+    receivePages: (pagesState: PagesState) => <ReceivePagesAction>{ type: 'RECEIVE_PAGES', payload: pagesState },
 };
 
 // ----------------
@@ -56,7 +48,7 @@ const unloadedState: PagesState = { pages: [] };
 export function pagesReducer(state: PagesState, action: KnownAction): PagesState {
     switch (action.type) {
         case 'RECEIVE_PAGES':
-            return { pages: action.payload };
+            return action.payload;
         default:
             return state || unloadedState;
     }

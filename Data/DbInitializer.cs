@@ -14,7 +14,9 @@ namespace site.Data
         {
             context.Database.EnsureCreated();//if db is not exist ,it will create database .but ,do nothing .
             string adminEmail = "admin@admin";
-            string password = "admin";
+            string adminPassword = "admin";
+            string userEmail = "user@user";
+            string userPassword = "user";
             if (await roleManager.FindByNameAsync("admin") == null)
             {
                 await roleManager.CreateAsync(new IdentityRole("admin"));
@@ -26,10 +28,19 @@ namespace site.Data
             if (await userManager.FindByNameAsync(adminEmail) == null)
             {
                 ApplicationUser admin = new ApplicationUser { Email = adminEmail, UserName = adminEmail };
-                IdentityResult result = await userManager.CreateAsync(admin, password);
+                IdentityResult result = await userManager.CreateAsync(admin, adminPassword);
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(admin, "admin");
+                }
+            }
+            if (await userManager.FindByNameAsync(userEmail) == null)
+            {
+                ApplicationUser user = new ApplicationUser { Email = userEmail, UserName = userEmail };
+                IdentityResult result = await userManager.CreateAsync(user, userPassword);
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, "user");
                 }
             }
         }

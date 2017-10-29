@@ -31,7 +31,7 @@ type KnownAction = RequestLocaleAction | ReceiveLocaleAction;
 
 export const localeActionCreators = {
     requestLocale: () => <RequestLocaleAction>{ type: 'REQUEST_LOCALE' },
-    receiveLocale: (locale) => <ReceiveLocaleAction>{ type: 'RECEIVE_LOCALE', payload: locale },
+    receiveLocale: (localeState) => <ReceiveLocaleAction>{ type: 'RECEIVE_LOCALE', payload: localeState },
 };
 
 // ----------------

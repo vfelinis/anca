@@ -35,13 +35,13 @@ type KnownAction = SetUserAction | ClearUserAction;
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const userActionCreators = {
-    setUser: (user: UserState) => <SetUserAction>{ type: 'SET_USER', payload: user },
+    setUser: (userState: UserState) => <SetUserAction>{ type: 'SET_USER', payload: userState },
     clearUser: () => <ClearUserAction>{ type: 'CLEAR_USER' }
 };
 
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
-const unloadedState: UserState = null;
+const unloadedState: UserState = { id: '', email: '', username: '', role: [], language: '', token: '' };
 
 export function userReducer(state: UserState, action: KnownAction): UserState {
     switch (action.type) {

@@ -21,17 +21,7 @@ namespace site.Models
         public List<Page> Pages { get; set; }
     }
 
-    public class Page : BasePage
-    {
-        [JsonProperty("subPages")]
-        public List<SubPage> SubPages { get; set; }
-    }
-
-    public class SubPage : BasePage
-    {       
-    }
-
-    public class BasePage
+    public class Page
     {
         [JsonProperty("id")]
         public int Id { get; set; }

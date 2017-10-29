@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Http, Headers } from '@angular/http';
@@ -12,7 +13,8 @@ import 'rxjs/add/operator/map';
 export class UserService {
   constructor(
     private store: Store<ApplicationState>,
-    private http: Http
+    private http: Http,
+    private router: Router
   ) {
     this.getUserFromMemory();
   }
@@ -32,6 +34,7 @@ export class UserService {
         } else {
           this.clearUserFromMemory();
         }
+        this.router.navigate(['']);
       },
       (error: any) => console.log(error)
     );
@@ -40,6 +43,7 @@ export class UserService {
   logout() {
     this.store.dispatch(userActionCreators.clearUser());
     this.clearUserFromMemory();
+    this.router.navigate(['']);
   }
 
   isAdmin(): Observable<boolean> {

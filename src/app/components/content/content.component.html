@@ -1,20 +1,28 @@
-<div id="primary-header" class="mat-h1">{{getLocalizedString(page.pageName) | async}}</div>
+<div id="primary-header" class="mat-h1">
+  <span [appLocalize]="page.pageName"></span>
+</div>
 <div id="content" fxLayout fxLayoutAlign="center">
   <div fxFlex.gt-md="80%">
     <mat-card fxLayout="column" fxLayoutGap="10px">
-      <div *ngIf="isEdit; then editor else view"></div>
-      <ng-template #editor>
-        <div fxFlexAlign="end">
-            <button (click)="editToogle()" mat-fab color="primary">{{getLocalizedString('Save') | async}}</button>
-            <button (click)="editToogle()" mat-fab color="warn">{{getLocalizedString('Cancel') | async}}</button>
-        </div>
-        <div [froalaEditor]="options" [(froalaModel)]="content.body"></div>
+      <div *ngIf="isAdmin; then adminView else userView"></div>
+      <ng-template #adminView>
+        <div *ngIf="isEdit; then editor else viewer"></div>
+        <ng-template #editor>
+          <div fxFlexAlign="end">
+            <button (click)="saveChanges()" mat-fab color="primary" [appLocalize]="'Save'"></button>
+            <button (click)="cancelEdit()" mat-fab color="warn" [appLocalize]="'Cancel'"></button>
+          </div>
+          <div [froalaEditor]="options" [(froalaModel)]="editableText"></div>
+        </ng-template>
+        <ng-template #viewer>
+          <div fxFlexAlign="end">
+            <button (click)="onEdit()" mat-fab color="primary" [appLocalize]="'Edit'"></button>
+          </div>
+          <div [froalaView]="content.text"></div>
+        </ng-template>
       </ng-template>
-      <ng-template #view>
-        <div fxFlexAlign="end">
-            <button (click)="editToogle()" mat-fab color="primary">{{getLocalizedString('Edit') | async}}</button>
-        </div>
-        <div [froalaView]="content.body"></div>
+      <ng-template #userView>
+        <div [froalaView]="content.text"></div>
       </ng-template>
     </mat-card>
   </div>
