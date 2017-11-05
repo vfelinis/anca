@@ -1,0 +1,31 @@
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <h4>{{page.name}}</h4>
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <mat-form-field>
+    <input matInput [formControl]="pageName">
+    <mat-placeholder [appLocalize]="'Name'"></mat-placeholder>
+    <mat-error *ngIf="pageName.invalid" [appLocalize]="getPageNameMessage()"></mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput [formControl]="pageUrl">
+    <mat-placeholder [appLocalize]="'Url'"></mat-placeholder>
+    <mat-error *ngIf="pageUrl.invalid" [appLocalize]="getPageUrlMessage()"></mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput type="number" [formControl]="pageOrderIndex">
+    <mat-placeholder [appLocalize]="'Order index'"></mat-placeholder>
+    <mat-error *ngIf="pageOrderIndex.invalid" [appLocalize]="getPageOrderIndexMessage()"></mat-error>
+  </mat-form-field>
+  <mat-checkbox [formControl]="pageActive" color="primary" [disabled]="page.url === ''">
+    <span [appLocalize]="'Active'"></span>
+  </mat-checkbox>
+  <div class="min-margin">
+    <button (click)="save()" mat-raised-button color="primary" [disabled]="needSave()" [appLocalize]="'Save'">
+    </button>
+    <button (click)="delete()" mat-raised-button color="warn" [disabled]="page.url === ''" [appLocalize]="'Delete'">
+    </button>
+  </div>
+</mat-expansion-panel>

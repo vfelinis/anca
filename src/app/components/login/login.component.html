@@ -17,7 +17,7 @@
           <mat-error *ngIf="password.invalid" [appLocalize]="getPasswordErrorMessage()"></mat-error>
         </mat-form-field>
         <div>
-          <mat-checkbox formControlName="rememberMe" color="primary">
+          <mat-checkbox [formControl]="rememberMe" color="primary">
             <span [appLocalize]="'Remember me'"></span>
           </mat-checkbox>
         </div>

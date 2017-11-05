@@ -1,0 +1,33 @@
+<h3 mat-dialog-title [appLocalize]="'New page'"></h3>
+<mat-dialog-content>
+  <div fxLayout fxLayoutAlign="center">
+    <div fxFlex="250px" fxFlex.gt-xs="350px" fxFlex.gt-sm="500px">
+      <form [formGroup]="createForm" (ngSubmit)="submit()" novalidate fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="stretch">
+        <mat-form-field>
+          <input matInput [formControl]="pageName">
+          <mat-placeholder [appLocalize]="'Name'"></mat-placeholder>
+          <mat-error *ngIf="pageName.invalid" [appLocalize]="getPageNameMessage()"></mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [formControl]="pageUrl">
+          <mat-placeholder [appLocalize]="'Url'"></mat-placeholder>
+          <mat-error *ngIf="pageUrl.invalid" [appLocalize]="getPageUrlMessage()"></mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="number" [formControl]="pageOrderIndex">
+          <mat-placeholder [appLocalize]="'Order index'"></mat-placeholder>
+          <mat-error *ngIf="pageOrderIndex.invalid" [appLocalize]="getPageOrderIndexMessage()"></mat-error>
+        </mat-form-field>
+        <mat-checkbox [formControl]="pageActive" color="primary">
+          <span [appLocalize]="'Active'"></span>
+        </mat-checkbox>
+        <div class="min-margin">
+          <button mat-raised-button color="primary" type="submit" [disabled]="createForm.invalid" [appLocalize]="'Save'">
+          </button>
+          <button mat-raised-button mat-dialog-close color="warn" [appLocalize]="'Close'">
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</mat-dialog-content>

@@ -30,8 +30,8 @@ namespace site.ApiControllers
                 LocaleState = _sharedLocalizer.GetAllStrings().ToDictionary(x => x.Name, x => x.Value),
                 PagesState = new PagesState{
                     Pages = new List<Page>{
-                    new Page{ Id = 1, PageName = "Home", PageUrl = "", OrderIndex = 1 },
-                    new Page{ Id = 2, PageName = "Contact", PageUrl = "contact", OrderIndex = 2 }
+                    new Page{ Id = 1, Name = "Home", Url = "", OrderIndex = 1, DateCreated = DateTime.UtcNow, Active = true },
+                    new Page{ Id = 2, Name = "Contact", Url = "contact", OrderIndex = 2, DateCreated = DateTime.UtcNow, Active = true }
                     }
                 }
             };

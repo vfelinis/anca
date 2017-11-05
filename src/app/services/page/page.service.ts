@@ -13,6 +13,18 @@ export class PageService {
   }
 
   getPageByCurrentRoute(): Observable<Page> {
-    return this.store.select(s => s.pagesState.pages.find(p => p.pageUrl === s.routerState.state.url.substring(1)));
+    return this.store.select(s => s.pagesState.pages.find(p => p.url === s.routerState.state.url.substring(1)));
+  }
+
+  update(page: Page) {
+    alert('update');
+  }
+
+  create(page: Page) {
+    alert('create');
+  }
+
+  delete(pageId: number) {
+    alert(pageId);
   }
 }

@@ -25,11 +25,15 @@ namespace site.Models
     {
         [JsonProperty("id")]
         public int Id { get; set; }
-        [JsonProperty("pageName")]
-        public string PageName { get; set; }
-        [JsonProperty("pageUrl")]
-        public string PageUrl { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("url")]
+        public string Url { get; set; }
         [JsonProperty("orderIndex")]
         public int OrderIndex { get; set; }
+        [JsonProperty("dateCreated")]
+        public DateTime DateCreated { get; set; }
+        [JsonProperty("active")]
+        public bool Active { get; set; }
     }
 }

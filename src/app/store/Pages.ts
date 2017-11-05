@@ -9,9 +9,11 @@ export interface PagesState {
 
 export interface Page {
     id: number;
-    pageName: string;
-    pageUrl: string;
+    name: string;
+    url: string;
     orderIndex: number;
+    dateCreated: string;
+    active: boolean;
 }
 
 // -----------------
