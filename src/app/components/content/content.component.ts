@@ -66,7 +66,9 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   saveChanges() {
-    this.contentService.saveContent(this.editableText);
+    if (this.content.text !== this.editableText) {
+      this.contentService.saveContent({ id: this.content.id, text: this.editableText });
+    }
     this.isEdit = false;
   }
 }

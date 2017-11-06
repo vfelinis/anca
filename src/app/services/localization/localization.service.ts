@@ -8,6 +8,7 @@ import { ApplicationState } from '../../store';
 @Injectable()
 export class LocalizationService {
   constructor(private store: Store<ApplicationState>) { }
+
   getLocalizedString(key: string): Observable<string> {
     return this.store.select(s => s.localeState[key] ? s.localeState[key] : `${key}^`);
   }

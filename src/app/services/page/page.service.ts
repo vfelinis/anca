@@ -16,12 +16,12 @@ export class PageService {
     return this.store.select(s => s.pagesState.pages.find(p => p.url === s.routerState.state.url.substring(1)));
   }
 
-  update(page: Page) {
-    alert('update');
-  }
-
   create(page: Page) {
     alert('create');
+  }
+
+  update(page: Page) {
+    alert('update');
   }
 
   delete(pageId: number) {

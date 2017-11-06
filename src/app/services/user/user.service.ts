@@ -6,7 +6,7 @@ import { Http, Headers } from '@angular/http';
 import { Response } from '@angular/http';
 import { ApplicationState } from '../../store';
 import { UserState, userActionCreators } from '../../store/User';
-import { setItem, getItem, removeItem } from '../../utils/localStorageUtil';
+import { setItemLS, getItemLS, removeItemLS, setItemSS, getItemSS, removeItemSS } from '../../utils/localStorageUtil';
 import 'rxjs/add/operator/map';
 
 @Injectable()
@@ -29,10 +29,13 @@ export class UserService {
     this.http.post(`api/account/login`, body, { headers: headers }).subscribe((resp: Response) => {
         const user: UserState = resp.json();
         this.store.dispatch(userActionCreators.setUser(user));
+        const userJSON = JSON.stringify(user);
         if (rememberMe) {
-          this.setUserIntoMemory(user);
+          removeItemSS('user');
+          setItemLS('user', userJSON);
         } else {
-          this.clearUserFromMemory();
+          removeItemLS('user');
+          setItemSS('user', userJSON);
         }
         this.router.navigate(['']);
       },
@@ -42,7 +45,8 @@ export class UserService {
 
   logout() {
     this.store.dispatch(userActionCreators.clearUser());
-    this.clearUserFromMemory();
+    removeItemSS('user');
+    removeItemLS('user');
     this.router.navigate(['']);
   }
 
@@ -51,19 +55,13 @@ export class UserService {
   }
 
   private getUserFromMemory() {
-    const value = getItem('user');
+    let value = getItemSS('user');
+    if (!value) {
+      value = getItemLS('user');
+    }
     if (value) {
       const user: UserState = JSON.parse(value);
       this.store.dispatch(userActionCreators.setUser(user));
     }
-  }
-
-  private setUserIntoMemory(user: UserState) {
-    const value: string = JSON.stringify(user);
-    setItem('user', value);
-  }
-
-  private clearUserFromMemory() {
-    removeItem('user');
   }
 }

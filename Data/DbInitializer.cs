@@ -43,6 +43,38 @@ namespace site.Data
                     await userManager.AddToRoleAsync(user, "user");
                 }
             }
+
+            var homePage = await context.Pages.FirstOrDefaultAsync(p => p.Url == string.Empty);
+            if(homePage == null){
+                var date = DateTime.UtcNow;
+                homePage = new Page{
+                    Name = "Главная",
+                    Url = string.Empty,
+                    OrderIndex = 1,
+                    DateCreated = date,
+                    LastUpdate = date,
+                    Active = true
+                };
+                await context.AddAsync(homePage);
+
+                var contentRU = new Content{
+                    Text = "Главная",
+                    Language = "ru",
+                    DateCreated = date,
+                    LastUpdate = date,
+                    Page = homePage
+                };
+
+                var contentEN = new Content{
+                    Text = "Home",
+                    Language = "en",
+                    DateCreated = date,
+                    LastUpdate = date,
+                    Page = homePage
+                };
+                await context.AddRangeAsync(new List<Content>{ contentRU, contentEN });
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

@@ -1,32 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 
 namespace site.Models
 {
-    // Add profile data for application users by adding properties to the ApplicationUser class
-    public class InitialReduxState
-    {
-        [JsonProperty("localeState")]
-        public Dictionary<string, string> LocaleState { get; set; }
-        [JsonProperty("pagesState")]
-        public PagesState PagesState { get; set; }
-    }
-
-    public class PagesState{
-        [JsonProperty("pages")]
-        public List<Page> Pages { get; set; }
-    }
-
-    public class Page
+    public class PageViewModel
     {
         [JsonProperty("id")]
         public int Id { get; set; }
+        [Required]
         [JsonProperty("name")]
         public string Name { get; set; }
+        [Required]
+        [MaxLength(100)]
         [JsonProperty("url")]
         public string Url { get; set; }
         [JsonProperty("orderIndex")]

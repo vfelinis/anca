@@ -1,22 +1,33 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using site;
+using site.Data;
 using site.Models;
 
 namespace site.ApiControllers
 {
     public class InitialStateController : Controller
     {
-
-        ILogger<InitialStateController> _logger;
+        private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly ILogger<InitialStateController> _logger;
         private readonly IStringLocalizer<SharedResource> _sharedLocalizer;
-        public InitialStateController(ILogger<InitialStateController> logger, IStringLocalizer<SharedResource> sharedLocalizer)
+        public InitialStateController(
+            ApplicationDbContext context,
+            IMapper mapper,
+            ILogger<InitialStateController> logger,
+            IStringLocalizer<SharedResource> sharedLocalizer)
         {
+            _context = context;
+            _mapper = mapper;
             _logger = logger;
             _sharedLocalizer = sharedLocalizer;
         }
@@ -25,14 +36,13 @@ namespace site.ApiControllers
         [Route("api/initialstate/script.js")]
         public JavaScriptResult GetScript()
         {
+            var language = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+            List<PageViewModel> pages = _context.Pages.Select(_mapper.Map<PageViewModel>).ToList();
             InitialReduxState store = new InitialReduxState
             {
                 LocaleState = _sharedLocalizer.GetAllStrings().ToDictionary(x => x.Name, x => x.Value),
                 PagesState = new PagesState{
-                    Pages = new List<Page>{
-                    new Page{ Id = 1, Name = "Home", Url = "", OrderIndex = 1, DateCreated = DateTime.UtcNow, Active = true },
-                    new Page{ Id = 2, Name = "Contact", Url = "contact", OrderIndex = 2, DateCreated = DateTime.UtcNow, Active = true }
-                    }
+                    Pages = pages
                 }
             };
             var json = JsonConvert.SerializeObject(store);

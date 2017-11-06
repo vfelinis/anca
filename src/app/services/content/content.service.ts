@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { Http } from '@angular/http';
+import { Http, Headers } from '@angular/http';
 import { Response } from '@angular/http';
 import { ApplicationState } from '../../store';
 import { ContentState, contentActionCreators } from '../../store/Content';
@@ -26,7 +26,14 @@ export class ContentService {
     );
   }
 
-  saveContent(text: string) {
-    this.store.dispatch(contentActionCreators.setContent({ text: text }));
+  saveContent(content: ContentState) {
+    const body = JSON.stringify(content);
+    const headers = new Headers({ 'Content-Type': 'application/json;charset=utf-8' });
+    this.http.put('api/contents', body, { headers: headers }).subscribe((resp: Response) => {
+        const data = resp.json();
+        this.store.dispatch(contentActionCreators.setContent(data));
+      },
+      (error: any) => console.log(error)
+    );
   }
 }

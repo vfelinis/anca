@@ -4,6 +4,7 @@ import { Action, ActionReducer } from '@ngrx/store';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface ContentState {
+    id: number;
     text: string;
 }
 
@@ -31,7 +32,7 @@ export const contentActionCreators = {
 
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
-const unloadedState: ContentState = { text: '' };
+const unloadedState: ContentState = { id: 0, text: '' };
 
 export function contentReducer(state: ContentState, action: KnownAction): ContentState {
     switch (action.type) {
