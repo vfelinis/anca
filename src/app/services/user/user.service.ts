@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { Http, Headers } from '@angular/http';
-import { Response } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ApplicationState } from '../../store';
 import { UserState, userActionCreators } from '../../store/User';
 import { setItemLS, getItemLS, removeItemLS, setItemSS, getItemSS, removeItemSS } from '../../utils/localStorageUtil';
@@ -13,7 +12,7 @@ import 'rxjs/add/operator/map';
 export class UserService {
   constructor(
     private store: Store<ApplicationState>,
-    private http: Http,
+    private http: HttpClient,
     private router: Router
   ) {
     this.getUserFromMemory();
@@ -25,9 +24,8 @@ export class UserService {
 
   login(email: string, password: string, rememberMe: boolean) {
     const body = JSON.stringify({ email: email, password: password, rememberMe: rememberMe });
-    const headers = new Headers({ 'Content-Type': 'application/json;charset=utf-8' });
-    this.http.post(`api/account/login`, body, { headers: headers }).subscribe((resp: Response) => {
-        const user: UserState = resp.json();
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json;charset=utf-8' });
+    this.http.post(`api/account/login`, body, { headers: headers }).subscribe((user: UserState) => {
         this.store.dispatch(userActionCreators.setUser(user));
         const userJSON = JSON.stringify(user);
         if (rememberMe) {
