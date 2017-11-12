@@ -7,6 +7,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using site;
 using site.Data;
@@ -19,17 +20,17 @@ namespace site.ApiControllers
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly ILogger<InitialStateController> _logger;
-        private readonly IStringLocalizer<SharedResource> _sharedLocalizer;
+        private readonly IStringLocalizer _localizer;
         public InitialStateController(
             ApplicationDbContext context,
             IMapper mapper,
             ILogger<InitialStateController> logger,
-            IStringLocalizer<SharedResource> sharedLocalizer)
+            IStringLocalizer localizer)
         {
             _context = context;
             _mapper = mapper;
             _logger = logger;
-            _sharedLocalizer = sharedLocalizer;
+            _localizer = localizer;
         }
 
         [HttpGet]
@@ -37,13 +38,15 @@ namespace site.ApiControllers
         public JavaScriptResult GetScript()
         {
             var language = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-            List<PageViewModel> pages = _context.Pages.Select(_mapper.Map<PageViewModel>).ToList();
+            List<PageViewModel> pages = _context.Pages.AsNoTracking().Select(_mapper.Map<PageViewModel>).ToList();
+            var setting = _context.Settings.AsNoTracking().Include(s => s.Cultures).FirstOrDefault();
             InitialReduxState store = new InitialReduxState
             {
-                LocaleState = _sharedLocalizer.GetAllStrings().ToDictionary(x => x.Name, x => x.Value),
+                LocaleState = _localizer.GetAllStrings().ToDictionary(x => x.Name, x => x.Value),
                 PagesState = new PagesState{
                     Pages = pages
-                }
+                },
+                SettingState = _mapper.Map<SettingViewModel>(setting)
             };
             var json = JsonConvert.SerializeObject(store);
             string script = $"window.initialReduxState = {json};";

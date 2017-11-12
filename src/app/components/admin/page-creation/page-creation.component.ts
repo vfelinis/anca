@@ -7,8 +7,7 @@ import { PageService } from '../../../services/page/page.service';
 @Component({
   selector: 'app-page-creation',
   templateUrl: './page-creation.component.html',
-  styleUrls: ['./page-creation.component.less'],
-  providers: [PageService]
+  styleUrls: ['./page-creation.component.less']
 })
 export class PageCreationComponent implements OnInit {
   private createForm: FormGroup;

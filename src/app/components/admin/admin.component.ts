@@ -12,8 +12,7 @@ import { PageCreationComponent } from './page-creation/page-creation.component';
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.less'],
-  providers: [ContentService, PageService, UserService]
+  styleUrls: ['./admin.component.less']
 })
 export class AdminComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();

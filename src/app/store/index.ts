@@ -11,6 +11,7 @@ import { contentReducer, ContentState } from './Content';
 import { pagesReducer, PagesState } from './Pages';
 import { localeReducer, LocaleState } from './Locale';
 import { userReducer, UserState } from './User';
+import { SettingState, settingReducer } from './Setting';
 
 // The top-level state object
 export interface ApplicationState {
@@ -19,6 +20,7 @@ export interface ApplicationState {
     pagesState: PagesState;
     localeState: LocaleState;
     userState: UserState;
+    settingState: SettingState;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -29,5 +31,6 @@ export const reducers: ActionReducerMap<ApplicationState> = {
     contentState: contentReducer,
     pagesState: pagesReducer,
     localeState: localeReducer,
-    userState: userReducer
+    userState: userReducer,
+    settingState: settingReducer
 };

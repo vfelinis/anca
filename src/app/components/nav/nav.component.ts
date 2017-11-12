@@ -10,8 +10,7 @@ import { UserService } from '../../services/user/user.service';
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.less'],
-  providers: [PageService, UserService]
+  styleUrls: ['./nav.component.less']
 })
 export class NavComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();

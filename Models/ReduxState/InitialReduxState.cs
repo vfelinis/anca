@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
+using site.Data;
 
 namespace site.Models
 {
@@ -14,6 +15,8 @@ namespace site.Models
         public Dictionary<string, string> LocaleState { get; set; }
         [JsonProperty("pagesState")]
         public PagesState PagesState { get; set; }
+        [JsonProperty("settingState")]
+        public SettingViewModel SettingState { get; set; }
     }
 
     public class PagesState{

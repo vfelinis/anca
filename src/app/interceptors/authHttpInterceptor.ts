@@ -11,10 +11,8 @@ import { UserService } from '../services/user/user.service';
 @Injectable()
 export class AuthHttpInterceptor implements HttpInterceptor {
     private user: UserState;
-    constructor(
-        private store: Store<ApplicationState>,
-        private inj: Injector
-    ) {
+    private userService: UserService;
+    constructor(private store: Store<ApplicationState>, private inj: Injector) {
         store.subscribe(s => this.user = s.userState);
     }
 

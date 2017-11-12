@@ -13,7 +13,6 @@ namespace site.Models
         [Required]
         [JsonProperty("name")]
         public string Name { get; set; }
-        [Required]
         [MaxLength(100)]
         [JsonProperty("url")]
         public string Url { get; set; }

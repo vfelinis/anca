@@ -46,7 +46,7 @@ namespace site.Data
                 }
             }
 
-            var setting = await context.Settings.FirstAsync();
+            var setting = await context.Settings.AsNoTracking().FirstOrDefaultAsync();
             if (setting == null)
             {
                 setting = new Setting

@@ -11,8 +11,7 @@ import { UserService } from '../../services/user/user.service';
 @Component({
   selector: 'app-content',
   templateUrl: './content.component.html',
-  styleUrls: ['./content.component.less'],
-  providers: [ContentService, PageService, UserService]
+  styleUrls: ['./content.component.less']
 })
 export class ContentComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();

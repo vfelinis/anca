@@ -36,7 +36,8 @@ namespace site.ApiControllers
       try
       {
         var language = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-        var content = await _context.Contents.FirstOrDefaultAsync(c => c.PageId == pageId && c.Language == language);
+        var content = await _context.Contents.AsNoTracking().Include(c => c.Culture)
+          .FirstOrDefaultAsync(c => c.PageId == pageId && c.Culture.Language == language);
         if(content == null){
           return StatusCode(404, "Content was not found");
         }

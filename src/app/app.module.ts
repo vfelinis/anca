@@ -39,6 +39,8 @@ import { environment } from '../environments/environment';
 import { AuthHttpInterceptor } from './interceptors/authHttpInterceptor';
 import { UserService } from './services/user/user.service';
 import { LocalizationService } from './services/localization/localization.service';
+import { ContentService } from './services/content/content.service';
+import { PageService } from './services/page/page.service';
 
 const initState = (window as any).initialReduxState as ApplicationState;
 
@@ -85,6 +87,8 @@ const initState = (window as any).initialReduxState as ApplicationState;
   providers: [
     LocalizationService,
     UserService,
+    ContentService,
+    PageService,
     LoginGuard,
     AdminGuard,
     { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
