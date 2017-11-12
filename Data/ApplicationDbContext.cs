@@ -11,6 +11,10 @@ namespace site.Data
     {
         public DbSet<Page> Pages { get; set; }
         public DbSet<Content> Contents { get; set; }
+        public DbSet<Setting> Settings { get; set; }
+        public DbSet<Culture> Cultures { get; set; }
+        public DbSet<Resource> Resources { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

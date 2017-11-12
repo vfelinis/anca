@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-
-import { LocalizationService } from '../../services/localization/localization.service';
 import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.less'],
-  providers: [LocalizationService, UserService]
+  providers: [UserService]
 })
 export class LoginComponent implements OnInit {
   private loginForm: FormGroup;

@@ -21,6 +21,8 @@ using System.IO;
 using Microsoft.AspNetCore.ResponseCompression;
 using AutoMapper;
 using System.Text;
+using Microsoft.Extensions.Localization;
+using site.Services.Localization;
 
 namespace site
 {
@@ -47,8 +49,9 @@ namespace site
                 options.EnableForHttps = true;
             });
 
+            var connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlite(connection));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
@@ -66,7 +69,10 @@ namespace site
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
-            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddTransient<IStringLocalizer, CustomStringLocalizer>();
+            services.AddSingleton<IStringLocalizerFactory>(new CustomStringLocalizerFactory(connection));
+
+            // services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             services.AddAuthentication(options =>
             {
@@ -102,7 +108,7 @@ namespace site
                 .AddDataAnnotationsLocalization(options =>
                 {
                     options.DataAnnotationLocalizerProvider = (type, factory) =>
-                        factory.Create(typeof(SharedResource));
+                        factory.Create(null);
                 })
                 .AddViewLocalization();
         }

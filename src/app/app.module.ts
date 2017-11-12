@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MatMenuModule, MatButtonModule, MatIconModule, MatCardModule,
@@ -28,7 +28,7 @@ import { AdminComponent } from './components/admin/admin.component';
 import { PageManagementComponent } from './components/admin/page-management/page-management.component';
 import { PageCreationComponent } from './components/admin/page-creation/page-creation.component';
 import { ConfirmDialogComponent } from './components/common/confirm-dialog/confirm-dialog.component';
-import { NotFoundComponent } from './components/not-found/not-found.component';
+import { ErrorComponent } from './components/error/error.component';
 
 import { LocalizeDirective } from './directives/localize/localize.directive';
 
@@ -36,6 +36,9 @@ import { LoginGuard } from './guards/login/login.guard';
 import { AdminGuard } from './guards/admin/admin.guard';
 
 import { environment } from '../environments/environment';
+import { AuthHttpInterceptor } from './interceptors/authHttpInterceptor';
+import { UserService } from './services/user/user.service';
+import { LocalizationService } from './services/localization/localization.service';
 
 const initState = (window as any).initialReduxState as ApplicationState;
 
@@ -49,7 +52,7 @@ const initState = (window as any).initialReduxState as ApplicationState;
     PageManagementComponent,
     PageCreationComponent,
     ConfirmDialogComponent,
-    NotFoundComponent,
+    ErrorComponent,
     LocalizeDirective
   ],
   imports: [
@@ -80,9 +83,16 @@ const initState = (window as any).initialReduxState as ApplicationState;
     FroalaViewModule.forRoot()
   ],
   providers: [
+    LocalizationService,
+    UserService,
     LoginGuard,
     AdminGuard,
     { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthHttpInterceptor,
+      multi: true
+    }
   ],
   entryComponents: [
     PageCreationComponent,

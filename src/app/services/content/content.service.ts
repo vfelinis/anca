@@ -26,7 +26,9 @@ export class ContentService {
 
   saveContent(content: ContentState) {
     const body = JSON.stringify(content);
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json;charset=utf-8' });
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json;charset=utf-8'
+    });
     this.http.put('api/contents', body, { headers: headers }).subscribe((data: ContentState) => {
         this.store.dispatch(contentActionCreators.setContent(data));
       },

@@ -18,9 +18,7 @@ namespace site.Data
         public DateTime DateCreated { get; set; }
         public DateTime LastUpdate { get; set; }
         public bool Active { get; set; }
-
         public List<Content> Contents { get; set; }
-
         public Page(){
             Contents = new List<Content>();
         }

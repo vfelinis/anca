@@ -19,7 +19,7 @@
     <mat-placeholder [appLocalize]="'Order index'"></mat-placeholder>
     <mat-error *ngIf="pageOrderIndex.invalid" [appLocalize]="getPageOrderIndexMessage()"></mat-error>
   </mat-form-field>
-  <mat-checkbox [formControl]="pageActive" color="primary" [disabled]="page.url === ''">
+  <mat-checkbox [formControl]="pageActive" color="primary">
     <span [appLocalize]="'Active'"></span>
   </mat-checkbox>
   <div class="min-margin">

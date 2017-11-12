@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -32,6 +33,7 @@ namespace site.Data
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(admin, "admin");
+                    await userManager.AddClaimAsync(admin, new Claim(ClaimTypes.Role, "admin"));
                 }
             }
             if (await userManager.FindByNameAsync(userEmail) == null)
@@ -44,11 +46,45 @@ namespace site.Data
                 }
             }
 
-            var homePage = await context.Pages.FirstOrDefaultAsync(p => p.Url == string.Empty);
-            if(homePage == null){
+            var setting = await context.Settings.FirstAsync();
+            if (setting == null)
+            {
+                setting = new Setting
+                {
+                    CompanyName = "CompanyName"
+                };
+                await context.Settings.AddAsync(setting);
+
+                var cultureRU = new Culture
+                {
+                    Language = "ru",
+                    Setting = setting
+                };
+                var cultureEN = new Culture
+                {
+                    Language = "en",
+                    Setting = setting
+                };
+                await context.Cultures.AddRangeAsync(new List<Culture> { cultureRU, cultureEN });
+
+                var resourceRU = new Resource
+                {
+                    Key = "Admin Panel",
+                    Value = "Панель управления",
+                    Culture = cultureRU
+                };
+                var resourceEN = new Resource
+                {
+                    Key = "Admin Panel",
+                    Value = "Admin Panel",
+                    Culture = cultureEN
+                };
+                await context.Resources.AddRangeAsync(new List<Resource> { resourceRU, resourceEN });
+
                 var date = DateTime.UtcNow;
-                homePage = new Page{
-                    Name = "Главная",
+                var homePage = new Page
+                {
+                    Name = "Home",
                     Url = string.Empty,
                     OrderIndex = 1,
                     DateCreated = date,
@@ -57,22 +93,25 @@ namespace site.Data
                 };
                 await context.AddAsync(homePage);
 
-                var contentRU = new Content{
+                var contentRU = new Content
+                {
                     Text = "Главная",
-                    Language = "ru",
                     DateCreated = date,
                     LastUpdate = date,
-                    Page = homePage
+                    Page = homePage,
+                    Culture = cultureRU
                 };
 
-                var contentEN = new Content{
+                var contentEN = new Content
+                {
                     Text = "Home",
-                    Language = "en",
                     DateCreated = date,
                     LastUpdate = date,
-                    Page = homePage
+                    Page = homePage,
+                    Culture = cultureEN
                 };
-                await context.AddRangeAsync(new List<Content>{ contentRU, contentEN });
+                await context.AddRangeAsync(new List<Content> { contentRU, contentEN });
+
                 await context.SaveChangesAsync();
             }
         }

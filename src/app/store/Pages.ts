@@ -16,31 +16,42 @@ export interface Page {
     active: boolean;
 }
 
+export interface UpdatedPage extends Page {
+    originalUrl: string;
+}
+
 // -----------------
 // ACTIONS - These are serializable (hence replayable) descriptions of state transitions.
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface RequestPagesAction {
-    type: 'REQUEST_PAGES';
+interface AddPagesAction {
+    type: 'ADD_PAGE';
+    payload: Page;
 }
 
-interface ReceivePagesAction {
-    type: 'RECEIVE_PAGES';
-    payload: PagesState;
+interface UpdatePagesAction {
+    type: 'UPDATE_PAGE';
+    payload: Page;
+}
+
+interface DeletePagesAction {
+    type: 'DELETE_PAGE';
+    payload: number;
 }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = RequestPagesAction | ReceivePagesAction;
+type KnownAction = AddPagesAction | UpdatePagesAction | DeletePagesAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const pagesActionCreators = {
-    requestPages: () => <RequestPagesAction>{ type: 'REQUEST_PAGES' },
-    receivePages: (pagesState: PagesState) => <ReceivePagesAction>{ type: 'RECEIVE_PAGES', payload: pagesState },
+    addPage: (page: Page) => <AddPagesAction>{ type: 'ADD_PAGE', payload: page },
+    updatePage: (page: Page) => <UpdatePagesAction>{ type: 'UPDATE_PAGE', payload: page },
+    deletePage: (pageId: number) => <DeletePagesAction>{ type: 'DELETE_PAGE', payload: pageId },
 };
 
 // ----------------
@@ -49,8 +60,12 @@ const unloadedState: PagesState = { pages: [] };
 
 export function pagesReducer(state: PagesState, action: KnownAction): PagesState {
     switch (action.type) {
-        case 'RECEIVE_PAGES':
-            return action.payload;
+        case 'ADD_PAGE':
+            return {...state, pages: [...state.pages, action.payload]};
+        case 'UPDATE_PAGE':
+            return {...state, pages: [...state.pages.filter(p => p.id !== action.payload.id), action.payload]};
+        case 'DELETE_PAGE':
+            return {...state, pages: [...state.pages.filter(p => p.id !== action.payload)]};
         default:
             return state || unloadedState;
     }

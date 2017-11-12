@@ -45,7 +45,7 @@ namespace site.ApiControllers
       }
     }
 
-    [Authorize]
+    [Authorize(Roles = "admin")]
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] PageViewModel model)
     {
@@ -91,7 +91,7 @@ namespace site.ApiControllers
       }
     }
 
-    [Authorize]
+    [Authorize(Roles = "admin")]
     [HttpPut]
     public async Task<IActionResult> Put([FromBody] PageViewModel model)
     {
@@ -121,7 +121,7 @@ namespace site.ApiControllers
       }
     }
 
-    [Authorize]
+    [Authorize(Roles = "admin")]
     [HttpDelete]
     public async Task<IActionResult> Delete(int id)
     {
@@ -133,7 +133,7 @@ namespace site.ApiControllers
         }
         _context.Pages.Remove(page);
         await _context.SaveChangesAsync();
-        return Ok();
+        return Ok(page);
       }
       catch (Exception ex)
       {

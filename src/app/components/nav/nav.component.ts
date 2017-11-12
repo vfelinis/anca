@@ -2,11 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/takeUntil';
 import { Subject } from 'rxjs/Subject';
-
 import { Page } from '../../store/Pages';
 import { UserState } from '../../store/User';
-
-import { LocalizationService } from '../../services/localization/localization.service';
 import { PageService } from '../../services/page/page.service';
 import { UserService } from '../../services/user/user.service';
 
@@ -14,7 +11,7 @@ import { UserService } from '../../services/user/user.service';
   selector: 'app-nav',
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.less'],
-  providers: [LocalizationService, PageService, UserService]
+  providers: [PageService, UserService]
 })
 export class NavComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();

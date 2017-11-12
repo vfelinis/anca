@@ -50,7 +50,7 @@ namespace site.ApiControllers
       }
     }
 
-    [Authorize]
+    [Authorize(Roles = "admin")]
     [HttpPut]
     public async Task<IActionResult> Put([FromBody] ContentViewModel model)
     {

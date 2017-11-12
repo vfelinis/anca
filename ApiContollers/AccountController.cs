@@ -53,7 +53,7 @@ namespace site.ApiControllers
         {
             if(model == null){
                 Response.StatusCode = 400;
-                await Response.WriteAsync("email/password is empty");
+                await Response.WriteAsync("email or password is empty");
             }
 
             var user = await _userManager.FindByEmailAsync(model.Email);
@@ -73,6 +73,7 @@ namespace site.ApiControllers
                     claims: await _userManager.GetClaimsAsync(user),
                     expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+                      
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
              
             var response = new
@@ -81,7 +82,6 @@ namespace site.ApiControllers
                 email = user.Email,
                 username = user.UserName,
                 role = await _userManager.GetRolesAsync(user),
-                language = "ru",
                 token = encodedJwt
             };
  

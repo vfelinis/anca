@@ -2,12 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/takeUntil';
 import { Subject } from 'rxjs/Subject';
-
 import { ContentState } from '../../store/Content';
 import { Page } from '../../store/Pages';
-import { UserState } from '../../store/User';
-
-import { LocalizationService } from '../../services/localization/localization.service';
 import { ContentService } from '../../services/content/content.service';
 import { PageService } from '../../services/page/page.service';
 import { UserService } from '../../services/user/user.service';
@@ -16,7 +12,7 @@ import { UserService } from '../../services/user/user.service';
   selector: 'app-content',
   templateUrl: './content.component.html',
   styleUrls: ['./content.component.less'],
-  providers: [LocalizationService, ContentService, PageService, UserService]
+  providers: [ContentService, PageService, UserService]
 })
 export class ContentComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();

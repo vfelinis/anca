@@ -1,16 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-
 import { Page } from '../../../store/Pages';
-
-import { LocalizationService } from '../../../services/localization/localization.service';
 import { PageService } from '../../../services/page/page.service';
 
 @Component({
   selector: 'app-page-creation',
   templateUrl: './page-creation.component.html',
   styleUrls: ['./page-creation.component.less'],
-  providers: [LocalizationService, PageService]
+  providers: [PageService]
 })
 export class PageCreationComponent implements OnInit {
   private createForm: FormGroup;
@@ -18,7 +16,10 @@ export class PageCreationComponent implements OnInit {
   private pageUrl: FormControl;
   private pageOrderIndex: FormControl;
   private pageActive: FormControl;
-  constructor(private pageService: PageService) {
+  constructor(
+    private dialogRef: MatDialogRef<PageCreationComponent>,
+    private pageService: PageService
+  ) {
     this.pageName = new FormControl('', [Validators.required]);
     this.pageUrl = new FormControl('', [Validators.pattern('[a-z0-9]+'), Validators.required]);
     this.pageOrderIndex = new FormControl(1, [Validators.required]);
@@ -54,11 +55,12 @@ export class PageCreationComponent implements OnInit {
         id: 0,
         name: this.pageName.value,
         url: this.pageUrl.value,
-        orderIndex: this.pageOrderIndex.value,
+        orderIndex: Math.round(this.pageOrderIndex.value),
         active: this.pageActive.value,
         dateCreated: new Date().toISOString()
       };
       this.pageService.create(page);
+      this.dialogRef.close();
     }
   }
 }

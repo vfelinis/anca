@@ -3,9 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import 'rxjs/add/operator/takeUntil';
 import { Subject } from 'rxjs/Subject';
-
-import { Page } from '../../../store/Pages';
-
+import { Page, UpdatedPage } from '../../../store/Pages';
 import { ConfirmDialogComponent } from '../../common/confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -15,7 +13,7 @@ import { ConfirmDialogComponent } from '../../common/confirm-dialog/confirm-dial
 })
 export class PageManagementComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
-  @Output() onSave = new EventEmitter<Page>();
+  @Output() onSave = new EventEmitter<UpdatedPage>();
   @Output() onDelete = new EventEmitter<number>();
   @Input() page = <Page>null;
   private pageName: FormControl;
@@ -28,11 +26,12 @@ export class PageManagementComponent implements OnInit, OnDestroy {
     this.pageName = new FormControl(this.page.name, [Validators.required]);
     if (this.page.url === '') {
       this.pageUrl = new FormControl({value: '', disabled: true});
+      this.pageActive = new FormControl({value: this.page.active, disabled: true});
     } else {
       this.pageUrl = new FormControl(this.page.url, [Validators.pattern('[a-z0-9]+'), Validators.required]);
+      this.pageActive = new FormControl(this.page.active);
     }
     this.pageOrderIndex = new FormControl(this.page.orderIndex, [Validators.required]);
-    this.pageActive = new FormControl(this.page.active);
   }
 
   ngOnDestroy() {
@@ -63,15 +62,16 @@ export class PageManagementComponent implements OnInit, OnDestroy {
 
   save() {
     if (!this.pageName.invalid && !this.pageUrl.invalid && !this.pageOrderIndex.invalid) {
-      const page: Page = {
+      const updatedPage: UpdatedPage = {
         id: this.page.id,
         name: this.pageName.value,
         url: this.pageUrl.value,
-        orderIndex: this.pageOrderIndex.value,
+        orderIndex: Math.round(this.pageOrderIndex.value),
         dateCreated: this.page.dateCreated,
-        active: this.pageActive.value
+        active: this.pageActive.value,
+        originalUrl: this.page.url
       };
-      this.onSave.emit(page);
+      this.onSave.emit(updatedPage);
     }
   }
 

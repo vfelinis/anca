@@ -1,5 +1,5 @@
 <div id="primary-header" class="mat-h1">
-  <span [appLocalize]="page.name"></span>
+  <span *ngIf="!!page" [appLocalize]="page.name"></span>
 </div>
 <div id="content" fxLayout fxLayoutAlign="center">
   <div fxFlex.gt-md="80%">

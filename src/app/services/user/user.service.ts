@@ -35,21 +35,30 @@ export class UserService {
           removeItemLS('user');
           setItemSS('user', userJSON);
         }
-        this.router.navigate(['']);
+        this.router.navigate(['/']);
       },
       (error: any) => console.log(error)
     );
   }
 
   logout() {
-    this.store.dispatch(userActionCreators.clearUser());
-    removeItemSS('user');
-    removeItemLS('user');
-    this.router.navigate(['']);
+    this.clearUser();
+    this.router.navigate(['/']);
+  }
+
+  unauthorized() {
+    this.clearUser();
+    this.router.navigate(['/login']);
   }
 
   isAdmin(): Observable<boolean> {
     return this.getUser().map(u => u.role.some(r => r === 'admin'));
+  }
+
+  private clearUser() {
+    this.store.dispatch(userActionCreators.clearUser());
+    removeItemSS('user');
+    removeItemLS('user');
   }
 
   private getUserFromMemory() {
