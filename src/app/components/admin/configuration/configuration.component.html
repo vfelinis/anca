@@ -1,0 +1,20 @@
+<form [formGroup]="configForm" (ngSubmit)="submit()" novalidate>
+  <mat-form-field>
+    <input matInput [formControl]="companyName">
+    <mat-placeholder [appLocalize]="'Company Name'"></mat-placeholder>
+    <mat-error *ngIf="companyName.invalid" [appLocalize]="getCompanyNameMessage()"></mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select [formControl]="languages" multiple>
+      <mat-option *ngFor="let lang of settings.supportedLanguages" [value]="lang">
+        <span [appLocalize]="lang"></span>
+      </mat-option>
+    </mat-select>
+    <mat-placeholder [appLocalize]="'Languages'"></mat-placeholder>
+    <mat-error *ngIf="languages.invalid" [appLocalize]="getLanguagesMessage()"></mat-error>
+  </mat-form-field>
+  <div>
+    <button mat-raised-button color="primary" type="submit" [disabled]="needSave()" [appLocalize]="'Save'">
+    </button>
+  </div>
+</form>

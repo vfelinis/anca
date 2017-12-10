@@ -58,11 +58,13 @@ namespace site.Data
                 var cultureRU = new Culture
                 {
                     Language = "ru",
+                    IsActive = true,
                     Setting = setting
                 };
                 var cultureEN = new Culture
                 {
                     Language = "en",
+                    IsActive = true,
                     Setting = setting
                 };
                 await context.Cultures.AddRangeAsync(new List<Culture> { cultureRU, cultureEN });

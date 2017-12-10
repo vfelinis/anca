@@ -11,6 +11,7 @@ namespace site.Data
         [Required]
         [MaxLength(2)]
         public string Language { get; set; }
+        public bool IsActive { get; set; }
         public int SettingId { get; set; }
         [ForeignKey(nameof(SettingId))]
         public Setting Setting { get; set; }

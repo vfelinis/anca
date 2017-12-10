@@ -3,10 +3,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CookieModule } from 'ngx-cookie';
 
 import { MatMenuModule, MatButtonModule, MatIconModule, MatCardModule,
   MatToolbarModule, MatDialogModule, MatFormFieldModule, MatInputModule,
-  MatCheckboxModule, MatTabsModule, MatExpansionModule } from '@angular/material';
+  MatCheckboxModule, MatTabsModule, MatExpansionModule, MatSelectModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 
@@ -24,11 +25,14 @@ import { AppComponent } from './app.component';
 import { NavComponent } from './components/nav/nav.component';
 import { ContentComponent } from './components/content/content.component';
 import { LoginComponent } from './components/login/login.component';
+import { ConfirmDialogComponent } from './components/common/confirm-dialog/confirm-dialog.component';
+import { ErrorComponent } from './components/error/error.component';
+import { UserSettingsComponent } from './components/user-settings/user-settings.component';
+
 import { AdminComponent } from './components/admin/admin.component';
 import { PageManagementComponent } from './components/admin/page-management/page-management.component';
 import { PageCreationComponent } from './components/admin/page-creation/page-creation.component';
-import { ConfirmDialogComponent } from './components/common/confirm-dialog/confirm-dialog.component';
-import { ErrorComponent } from './components/error/error.component';
+import { ConfigurationComponent } from './components/admin/configuration/configuration.component';
 
 import { LocalizeDirective } from './directives/localize/localize.directive';
 
@@ -41,6 +45,7 @@ import { UserService } from './services/user/user.service';
 import { LocalizationService } from './services/localization/localization.service';
 import { ContentService } from './services/content/content.service';
 import { PageService } from './services/page/page.service';
+import { SettingsService } from './services/settings/settings.service';
 
 const initState = (window as any).initialReduxState as ApplicationState;
 
@@ -55,7 +60,9 @@ const initState = (window as any).initialReduxState as ApplicationState;
     PageCreationComponent,
     ConfirmDialogComponent,
     ErrorComponent,
-    LocalizeDirective
+    UserSettingsComponent,
+    LocalizeDirective,
+    ConfigurationComponent
   ],
   imports: [
     BrowserModule,
@@ -64,6 +71,7 @@ const initState = (window as any).initialReduxState as ApplicationState;
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
+    CookieModule.forRoot(),
 
     StoreModule.forRoot(reducers, {initialState: initState}),
     StoreRouterConnectingModule,
@@ -80,6 +88,7 @@ const initState = (window as any).initialReduxState as ApplicationState;
     MatCheckboxModule,
     MatTabsModule,
     MatExpansionModule,
+    MatSelectModule,
     FlexLayoutModule,
     FroalaEditorModule.forRoot(),
     FroalaViewModule.forRoot()
@@ -89,6 +98,7 @@ const initState = (window as any).initialReduxState as ApplicationState;
     UserService,
     ContentService,
     PageService,
+    SettingsService,
     LoginGuard,
     AdminGuard,
     { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },

@@ -14,16 +14,16 @@ namespace site.ApiControllers
 {
 
     [Route("api/pages")]
-    public class PageController : Controller
+    public class PagesController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly ILogger<PageController> _logger;
+        private readonly ILogger<PagesController> _logger;
 
-        public PageController(
+        public PagesController(
           ApplicationDbContext context,
           IMapper mapper,
-          ILogger<PageController> logger)
+          ILogger<PagesController> logger)
         {
             _context = context;
             _mapper = mapper;
@@ -116,7 +116,8 @@ namespace site.ApiControllers
                 page.OrderIndex = model.OrderIndex;
                 page.LastUpdate = DateTime.UtcNow;
 
-                if (!string.IsNullOrWhiteSpace(model.Url)) {
+                if (!string.IsNullOrWhiteSpace(model.Url))
+                {
                     page.Url = model.Url;
                 }
 

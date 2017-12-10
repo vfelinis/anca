@@ -15,7 +15,7 @@ namespace site.Models
         public Dictionary<string, string> LocaleState { get; set; }
         [JsonProperty("pagesState")]
         public PagesState PagesState { get; set; }
-        [JsonProperty("settingState")]
+        [JsonProperty("settingsState")]
         public SettingViewModel SettingState { get; set; }
     }
 

@@ -3,7 +3,7 @@
     <button mat-button routerLink="/">
         <h1>
             <mat-icon>public</mat-icon>
-            <span [appLocalize]="'Company Name'"></span>
+            <span [appLocalize]="settings.companyName"></span>
         </h1>
     </button>
 
@@ -12,24 +12,29 @@
     <div fxLayout="row" fxShow="false" fxShow.gt-sm class="fill-remaining-space">
         <button mat-button *ngFor="let page of pages" routerLink="{{page.url}}" [appLocalize]="page.name">
         </button>
-        <div *ngIf="user.email; then profile else login"></div>
-        <ng-template #profile>
-            <div fxLayout="column" fxFlex.gt-sm="100%">
-                <button mat-button [mat-menu-trigger-for]="userMenu" fxFlexAlign="end">
-                    <mat-icon>person</mat-icon>
-                    {{user.username}}
-                    <mat-icon>expand_more</mat-icon>
+
+        <div fxLayout="column" fxFlex.gt-sm="100%">
+            <div fxFlexAlign="end">
+                <button mat-button routerLink="settings">
+                    <mat-icon>settings</mat-icon>
+                    <span [appLocalize]="'Settings'"></span>
                 </button>
+                <div *ngIf="user.email; then profile else login"></div>
+                <ng-template #profile>
+                    <button mat-button [mat-menu-trigger-for]="userMenu">
+                        <mat-icon>person</mat-icon>
+                        {{user.username}}
+                        <mat-icon>expand_more</mat-icon>
+                    </button>
+                </ng-template>
+                <ng-template #login>
+                    <button mat-button routerLink="login">
+                        <mat-icon>input</mat-icon>
+                        <span [appLocalize]="'Login'"></span>
+                    </button>
+                </ng-template>
             </div>
-        </ng-template>
-        <ng-template #login>
-            <div fxLayout="column" fxFlex.gt-sm="100%">
-                <button mat-button routerLink="login" fxFlexAlign="end">
-                    <mat-icon>input</mat-icon>
-                    <span [appLocalize]="'Login'"></span>
-                </button>
-            </div>
-        </ng-template>
+        </div>
     </div>
     <div fxLayout="row-reverse" fxHide="false" fxHide.gt-sm class="fill-remaining-space">
         <button mat-button [mat-menu-trigger-for]="menu">
@@ -41,17 +46,18 @@
 <mat-menu #menu="matMenu">
     <button mat-menu-item *ngFor="let page of pages" routerLink="{{page.url}}" [appLocalize]="page.name">
     </button>
+    <button mat-button routerLink="settings" [appLocalize]="'Settings'">
+    </button>
     <div *ngIf="user.email; then profileMenu else loginMenu"></div>
     <ng-template #profileMenu>
-            <button mat-menu-item [mat-menu-trigger-for]="userMenu">
-                {{user.username}}
-            </button>
+        <button mat-menu-item [mat-menu-trigger-for]="userMenu">
+            {{user.username}}
+        </button>
     </ng-template>
     <ng-template #loginMenu>
-            <button mat-menu-item routerLink="login">
-                <mat-icon>input</mat-icon>
-                <span [appLocalize]="'Login'"></span>
-            </button>
+        <button mat-menu-item routerLink="login">
+            <span [appLocalize]="'Login'"></span>
+        </button>
     </ng-template>
 </mat-menu>
 

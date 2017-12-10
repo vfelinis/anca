@@ -13,7 +13,7 @@ export class AuthHttpInterceptor implements HttpInterceptor {
     private user: UserState;
     private userService: UserService;
     constructor(private store: Store<ApplicationState>, private inj: Injector) {
-        store.subscribe(s => this.user = s.userState);
+        this.store.subscribe(s => this.user = s.userState);
     }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

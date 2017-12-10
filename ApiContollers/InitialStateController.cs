@@ -34,19 +34,20 @@ namespace site.ApiControllers
         }
 
         [HttpGet]
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [Route("api/initialstate/script.js")]
         public JavaScriptResult GetScript()
         {
             var language = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
             List<PageViewModel> pages = _context.Pages.AsNoTracking().Select(_mapper.Map<PageViewModel>).ToList();
-            var setting = _context.Settings.AsNoTracking().Include(s => s.Cultures).FirstOrDefault();
+            var settings = _context.Settings.AsNoTracking().Include(s => s.Cultures).FirstOrDefault();
             InitialReduxState store = new InitialReduxState
             {
                 LocaleState = _localizer.GetAllStrings().ToDictionary(x => x.Name, x => x.Value),
                 PagesState = new PagesState{
                     Pages = pages
                 },
-                SettingState = _mapper.Map<SettingViewModel>(setting)
+                SettingState = _mapper.Map<SettingViewModel>(settings)
             };
             var json = JsonConvert.SerializeObject(store);
             string script = $"window.initialReduxState = {json};";

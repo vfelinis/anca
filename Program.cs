@@ -78,7 +78,7 @@ namespace site
                                     var certs = store.Certificates.Find(X509FindType.FindBySubjectName, "localhost", false);
                                     if (certs.Count > 0)
                                     {
-                                        var certificate = certs[1];
+                                        var certificate = certs[0];
                                         opt.UseHttps(certificate);
                                     }
                                 }

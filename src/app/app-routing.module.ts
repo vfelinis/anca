@@ -5,6 +5,7 @@ import { ContentComponent } from './components/content/content.component';
 import { LoginComponent } from './components/login/login.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { ErrorComponent } from './components/error/error.component';
+import { UserSettingsComponent } from './components/user-settings/user-settings.component';
 
 import { LoginGuard } from './guards/login/login.guard';
 import { AdminGuard } from './guards/admin/admin.guard';
@@ -21,6 +22,7 @@ if (initState && initState.pagesState && initState.pagesState.pages instanceof A
 
 routes.push({ path: 'login',  component: LoginComponent, canActivate: [LoginGuard] });
 routes.push({ path: 'admin',  component: AdminComponent, canActivate: [AdminGuard] });
+routes.push({ path: 'settings',  component: UserSettingsComponent });
 routes.push({ path: '**', component: ErrorComponent });
 
 @NgModule({

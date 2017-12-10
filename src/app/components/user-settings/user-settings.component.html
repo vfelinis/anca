@@ -1,0 +1,23 @@
+<div id="primary-header" class="mat-h2">
+  <span [appLocalize]="'Settings'"></span>
+</div>
+<div id="content" fxLayout fxLayoutAlign="center" fxLayoutGap="0">
+  <div class="item" fxFlex.gt-md="80%">
+    <mat-card>
+      <form [formGroup]="settingsForm" (ngSubmit)="submit()" novalidate>
+        <mat-form-field>
+          <mat-placeholder [appLocalize]="'Language'"></mat-placeholder>
+          <mat-select [formControl]="languages">
+            <mat-option *ngFor="let lang of settings.languages" [value]="lang">
+              <span [appLocalize]="lang"></span>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div>
+          <button mat-raised-button color="primary" type="submit" [disabled]="needSave()" [appLocalize]="'Save'">
+          </button>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</div>
