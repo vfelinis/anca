@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using site;
 using site.Data;
 using site.Models;
+using site.Services.Localization;
 
 namespace site.ApiControllers
 {
@@ -20,12 +21,12 @@ namespace site.ApiControllers
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly ILogger<InitialStateController> _logger;
-        private readonly IStringLocalizer _localizer;
+        private readonly INewStringLocalizer _localizer;
         public InitialStateController(
             ApplicationDbContext context,
             IMapper mapper,
             ILogger<InitialStateController> logger,
-            IStringLocalizer localizer)
+            INewStringLocalizer localizer)
         {
             _context = context;
             _mapper = mapper;
@@ -36,14 +37,13 @@ namespace site.ApiControllers
         [HttpGet]
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [Route("api/initialstate/script.js")]
-        public JavaScriptResult GetScript()
+        public async Task<JavaScriptResult> GetScript()
         {
-            var language = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
             List<PageViewModel> pages = _context.Pages.AsNoTracking().Select(_mapper.Map<PageViewModel>).ToList();
             var settings = _context.Settings.AsNoTracking().Include(s => s.Cultures).FirstOrDefault();
             InitialReduxState store = new InitialReduxState
             {
-                LocaleState = _localizer.GetAllStrings().ToDictionary(x => x.Name, x => x.Value),
+                LocaleState = await _localizer.GetLocale(true),
                 PagesState = new PagesState{
                     Pages = pages
                 },

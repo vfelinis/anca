@@ -22,4 +22,12 @@
       </app-page-management>
     </div>
   </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span [appLocalize]="'Localization'"></span>
+    </ng-template>
+    <div class="tab-content">
+      <app-localization></app-localization>
+    </div>
+  </mat-tab>
 </mat-tab-group>

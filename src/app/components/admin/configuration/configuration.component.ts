@@ -47,7 +47,7 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
     return this.languages.hasError('required') ? 'You must enter a value' : '';
   }
 
-  needSave() {
+  notNeedSave() {
     return this.settings.companyName === this.companyName.value
             && this.settings.languages.length === this.languages.value.length
             && this.settings.languages.every(l => this.languages.value.some(v => v === l));

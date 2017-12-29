@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ApplicationState } from '../../store';
 import { SettingsState, settingsActionCreators } from '../../store/Settings';
+import { LocalizationService } from '../localization/localization.service';
 
 @Injectable()
 export class SettingsService {
@@ -11,6 +12,7 @@ export class SettingsService {
   constructor(
     private store: Store<ApplicationState>,
     private http: HttpClient,
+    private localizationService: LocalizationService
   ) { }
 
   getSettings(): Observable<SettingsState> {
@@ -24,6 +26,7 @@ export class SettingsService {
     });
     this.http.put(`api/settings`, body, { headers: headers }).subscribe((data: SettingsState) => {
         this.store.dispatch(settingsActionCreators.setSettings(data));
+        this.localizationService.fetchLocale();
       },
       (error: any) => console.log(error)
     );

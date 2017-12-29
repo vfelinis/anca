@@ -12,7 +12,7 @@ namespace site.Models
     public class InitialReduxState
     {
         [JsonProperty("localeState")]
-        public Dictionary<string, string> LocaleState { get; set; }
+        public LocaleViewModel LocaleState { get; set; }
         [JsonProperty("pagesState")]
         public PagesState PagesState { get; set; }
         [JsonProperty("settingsState")]

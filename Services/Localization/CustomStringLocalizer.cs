@@ -47,10 +47,22 @@ namespace site.Services.Localization
  
         public IEnumerable<LocalizedString> GetAllStrings(bool includeAncestorCultures)
         {
-            return _context.Resources
-                .Include(r => r.Culture)
-                .Where(r => r.Culture.Language == CultureInfo.CurrentCulture.TwoLetterISOLanguageName)
-                .Select(r => new LocalizedString(r.Key, r.Value));
+            List<LocalizedString> locale = new List<LocalizedString>();
+            if (_context.Cultures.Where(c => c.IsActive).Count() == 1){
+                locale = _context.Cultures
+                    .Include(c => c.Resources)
+                    .Where(c => c.IsActive)
+                    .SelectMany(c => c.Resources.Select(r => new LocalizedString(r.Key, r.Value)))
+                    .ToList();
+            }
+            else{
+                locale = _context.Cultures
+                    .Include(c => c.Resources)
+                    .Where(c => c.Language == CultureInfo.CurrentCulture.TwoLetterISOLanguageName)
+                    .SelectMany(c => c.Resources.Select(r => new LocalizedString(r.Key, r.Value)))
+                    .ToList();
+            }
+            return locale;
         }
  
         private string GetString(string name)

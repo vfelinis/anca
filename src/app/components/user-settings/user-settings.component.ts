@@ -6,6 +6,7 @@ import { Subject } from 'rxjs/Subject';
 import { CookieService, CookieOptions } from 'ngx-cookie';
 import { SettingsState } from '../../store/Settings';
 import { SettingsService } from '../../services/settings/settings.service';
+import { LocalizationService } from '../../services/localization/localization.service';
 
 @Component({
   selector: 'app-user-settings',
@@ -20,7 +21,8 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
   private currentLanguage = '';
   constructor(
     private cookieService: CookieService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private localizationService: LocalizationService
   ) {
     this.settingsService.getSettings().takeUntil(this.ngUnsubscribe).subscribe(s => this.settings = s);
   }
@@ -44,7 +46,7 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
-  needSave() {
+  notNeedSave() {
     return this.currentLanguage === this.languages.value;
   }
 
@@ -59,6 +61,7 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
         cookieOptions
       );
       this.currentLanguage = this.languages.value;
+      this.localizationService.fetchLocale(true);
     }
   }
 }

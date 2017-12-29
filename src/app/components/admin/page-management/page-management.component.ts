@@ -53,7 +53,7 @@ export class PageManagementComponent implements OnInit, OnDestroy {
     return this.pageOrderIndex.hasError('required') ? 'You must enter a value' : '';
   }
 
-  needSave() {
+  notNeedSave() {
     return this.page.name === this.pageName.value
             && this.page.url === this.pageUrl.value
             && this.page.orderIndex === this.pageOrderIndex.value

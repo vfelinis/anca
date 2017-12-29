@@ -33,6 +33,7 @@ import { AdminComponent } from './components/admin/admin.component';
 import { PageManagementComponent } from './components/admin/page-management/page-management.component';
 import { PageCreationComponent } from './components/admin/page-creation/page-creation.component';
 import { ConfigurationComponent } from './components/admin/configuration/configuration.component';
+import { LocalizationComponent } from './components/admin/localization/localization.component';
 
 import { LocalizeDirective } from './directives/localize/localize.directive';
 
@@ -62,7 +63,8 @@ const initState = (window as any).initialReduxState as ApplicationState;
     ErrorComponent,
     UserSettingsComponent,
     LocalizeDirective,
-    ConfigurationComponent
+    ConfigurationComponent,
+    LocalizationComponent
   ],
   imports: [
     BrowserModule,

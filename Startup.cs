@@ -71,6 +71,7 @@ namespace site
 
             services.AddTransient<IStringLocalizer, CustomStringLocalizer>();
             services.AddSingleton<IStringLocalizerFactory>(new CustomStringLocalizerFactory(connection));
+            services.AddTransient<INewStringLocalizer, NewStringLocalizer>();
 
             // services.AddLocalization(options => options.ResourcesPath = "Resources");
 

@@ -14,7 +14,7 @@
     <mat-error *ngIf="languages.invalid" [appLocalize]="getLanguagesMessage()"></mat-error>
   </mat-form-field>
   <div>
-    <button mat-raised-button color="primary" type="submit" [disabled]="needSave()" [appLocalize]="'Save'">
+    <button mat-raised-button color="primary" type="submit" [disabled]="notNeedSave()" [appLocalize]="'Save'">
     </button>
   </div>
 </form>
