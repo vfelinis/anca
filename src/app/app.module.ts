@@ -10,6 +10,7 @@ import { MatMenuModule, MatButtonModule, MatIconModule, MatCardModule,
   MatCheckboxModule, MatTabsModule, MatExpansionModule, MatSelectModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 import { StoreModule } from '@ngrx/store';
 import {
@@ -93,7 +94,8 @@ const initState = (window as any).initialReduxState as ApplicationState;
     MatSelectModule,
     FlexLayoutModule,
     FroalaEditorModule.forRoot(),
-    FroalaViewModule.forRoot()
+    FroalaViewModule.forRoot(),
+    Ng2SmartTableModule
   ],
   providers: [
     LocalizationService,

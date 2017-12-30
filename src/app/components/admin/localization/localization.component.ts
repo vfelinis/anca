@@ -1,8 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/map';
 import { Subject } from 'rxjs/Subject';
+import { Ng2SmartTableModule, LocalDataSource } from 'ng2-smart-table';
 import { LocaleState, localeActionCreators } from '../../../store/Locale';
 import { LocalizationService } from '../../../services/localization/localization.service';
+
+interface Table {
+  settings: any;
+  source: LocalDataSource;
+}
 
 @Component({
   selector: 'app-localization',
@@ -12,11 +19,18 @@ import { LocalizationService } from '../../../services/localization/localization
 export class LocalizationComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
   private locale: LocaleState;
-
+  private table: Table;
   constructor(
     private localizationService: LocalizationService
   ) {
     this.localizationService.getLocale().takeUntil(this.ngUnsubscribe).subscribe(c => this.locale = c);
+    this.localizationService.getLocale().takeUntil(this.ngUnsubscribe)
+      .map(c => {
+        return {
+          settings: this.getTableSettings(c.locales),
+          source: this.getTableData(c.locales)
+        };
+      }).subscribe(c => this.table = c);
   }
 
   ngOnInit() {
@@ -26,5 +40,53 @@ export class LocalizationComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  getTableSettings(locales: any) {
+    const settings = {
+      add: {
+        confirmCreate: true
+      },
+      edit: {
+        confirmSave: true
+      },
+      delete: {
+        confirmDelete: true
+      },
+      columns: {key: {title: 'key'}}
+    };
+    Object.keys(locales).forEach(p => settings.columns[p] = {title: p});
+    return settings;
+  }
+
+  getTableData(locales: any): LocalDataSource {
+    const source = new LocalDataSource();
+    const columns = [];
+    let keys = [];
+    Object.keys(locales).forEach(p => {
+      columns.push(p);
+      keys.push(...Object.keys(locales[p]));
+    });
+    keys = Array.from(new Set(keys));
+    keys.forEach(k => {
+      const row = {key: k};
+      columns.forEach(c => {
+        row[c] = locales[c][k];
+      });
+      source.add(row);
+    });
+    return source;
+  }
+
+  onCreateConfirm(event) {
+    console.log(event);
+  }
+
+  onSaveConfirm(event) {
+    console.log(event);
+  }
+
+  onDeleteConfirm(event) {
+    console.log(event);
   }
 }

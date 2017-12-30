@@ -56,8 +56,10 @@ namespace site.Services.Localization
             return new LocaleViewModel{
                 CurrentLanguage = language,
                 Locales = new Locales{
-                    EN = data?.FirstOrDefault(c => c.Language == "en")?.Resources.ToDictionary(x => x.Key, x => x.Value),
+                    EN = data?.FirstOrDefault(c => c.Language == "en")?.Resources.ToDictionary(x => x.Key, x => x.Value)
+                        ?? new Dictionary<string, string>(),
                     RU = data?.FirstOrDefault(c => c.Language == "ru")?.Resources.ToDictionary(x => x.Key, x => x.Value)
+                        ?? new Dictionary<string, string>()
                 }
             };
         }
