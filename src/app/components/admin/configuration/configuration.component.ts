@@ -4,8 +4,8 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/takeUntil';
 import { Subject } from 'rxjs/Subject';
 import { CookieService, CookieOptions } from 'ngx-cookie';
-import { SettingsState } from '../../../store/Settings';
-import { SettingsService } from '../../../services/settings/settings.service';
+import { SettingState } from '../../../store/Setting';
+import { SettingService } from '../../../services/setting/setting.service';
 
 @Component({
   selector: 'app-configuration',
@@ -17,10 +17,10 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
   private configForm: FormGroup;
   private companyName: FormControl;
   private languages: FormControl;
-  private settings: SettingsState;
+  private settings: SettingState;
   constructor(
     private cookieService: CookieService,
-    private settingsService: SettingsService
+    private settingsService: SettingService
   ) {
     this.settingsService.getSettings().takeUntil(this.ngUnsubscribe).subscribe(s => this.settings = s);
   }
@@ -56,7 +56,7 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
   submit() {
     console.log(this.languages.value);
     if (this.configForm.status === 'VALID') {
-      const updatedSettings: SettingsState = {
+      const updatedSettings: SettingState = {
         id: this.settings.id,
         companyName: this.companyName.value,
         languages: this.languages.value,

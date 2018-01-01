@@ -47,7 +47,7 @@ import { UserService } from './services/user/user.service';
 import { LocalizationService } from './services/localization/localization.service';
 import { ContentService } from './services/content/content.service';
 import { PageService } from './services/page/page.service';
-import { SettingsService } from './services/settings/settings.service';
+import { SettingService } from './services/setting/setting.service';
 
 const initState = (window as any).initialReduxState as ApplicationState;
 
@@ -102,7 +102,7 @@ const initState = (window as any).initialReduxState as ApplicationState;
     UserService,
     ContentService,
     PageService,
-    SettingsService,
+    SettingService,
     LoginGuard,
     AdminGuard,
     { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },

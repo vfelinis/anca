@@ -8,7 +8,7 @@ import { LocalizationService } from '../../../services/localization/localization
 
 interface Table {
   settings: any;
-  source: LocalDataSource;
+  source: Array<any>;
 }
 
 @Component({
@@ -59,8 +59,8 @@ export class LocalizationComponent implements OnInit, OnDestroy {
     return settings;
   }
 
-  getTableData(locales: any): LocalDataSource {
-    const source = new LocalDataSource();
+  getTableData(locales: any): Array<any> {
+    const source = [];
     const columns = [];
     let keys = [];
     Object.keys(locales).forEach(p => {
@@ -73,20 +73,29 @@ export class LocalizationComponent implements OnInit, OnDestroy {
       columns.forEach(c => {
         row[c] = locales[c][k];
       });
-      source.add(row);
+      source.push(row);
     });
     return source;
   }
 
   onCreateConfirm(event) {
-    console.log(event);
+    if (!!event.newData.key && this.table.source.some(s => s.key !==  event.newData.key)) {
+      this.localizationService.createResources(event.newData);
+    }
   }
 
-  onSaveConfirm(event) {
-    console.log(event);
+  onUpdateConfirm(event) {
+    let needSave = false;
+    Object.keys(event.newData).forEach(k => {
+      needSave = needSave || event.newData[k] !== event.data[k];
+    });
+    if (needSave) {
+      event.newData['oldKey'] = event.data['key'];
+      this.localizationService.updateResources(event.newData);
+    }
   }
 
   onDeleteConfirm(event) {
-    console.log(event);
+    this.localizationService.deleteResources(event.data.key);
   }
 }

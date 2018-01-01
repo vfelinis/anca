@@ -9,75 +9,64 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using site.Data;
 using site.Models;
+using site.Services;
 
 namespace site.ApiControllers
 {
 
-  [Route("api/contents")]
-  public class ContentController : Controller
-  {
-    private readonly ApplicationDbContext _context;
-    private readonly IMapper _mapper;
-    private readonly ILogger<ContentController> _logger;
-
-    public ContentController(
-      ApplicationDbContext context,
-      IMapper mapper,
-      ILogger<ContentController> logger)
+    [Route("api/contents")]
+    public class ContentController : Controller
     {
-      _context = context;
-      _mapper = mapper;
-      _logger = logger;
-    }
+        private readonly IContentService _contentService;
+        private readonly ILogger<ContentController> _logger;
 
-    [HttpGet]
-    public async Task<IActionResult> Get(int pageId)
-    {
-      try
-      {
-        var language = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-        var content = await _context.Contents.AsNoTracking().Include(c => c.Culture)
-          .FirstOrDefaultAsync(c => c.PageId == pageId && c.Culture.Language == language);
-        if(content == null){
-          return StatusCode(404, "Content was not found");
+        public ContentController(
+          IContentService contentService,
+          ILogger<ContentController> logger)
+        {
+            _contentService = contentService;
+            _logger = logger;
         }
-        var result = _mapper.Map<ContentViewModel>(content);
-        return Ok(result);
-      }
-      catch (Exception ex)
-      {
-        _logger.LogError("Failed to execute GET");
-        return StatusCode(500, ex.Message);
-      }
-    }
 
-    [Authorize(Roles = "admin")]
-    [HttpPut]
-    public async Task<IActionResult> Put([FromBody] ContentViewModel model)
-    {
-      try
-      {
-        if(!ModelState.IsValid){
-          return BadRequest(ModelState);
+        [HttpGet]
+        public async Task<IActionResult> Get(int pageId)
+        {
+            try
+            {
+                var language = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+                var content = await _contentService.GetContentByPageAndLanguageAsync(pageId, language);
+                if (content == null)
+                    return StatusCode(404, "Content was not found");
+
+                return Ok(content);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to execute GET");
+                return StatusCode(500, ex.Message);
+            }
         }
-        var content = await _context.Contents.FindAsync(model.Id);
-        if(content == null){
-          return StatusCode(404, "Content was not found");
+
+        [Authorize(Roles = "admin")]
+        [HttpPut]
+        public async Task<IActionResult> Put([FromBody] ContentViewModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var content = await _contentService.UpdateContentAsync(model);
+                if (content == null)
+                    return StatusCode(404, "Content was not found");
+
+                return Ok(content);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to execute POST");
+                return StatusCode(500, ex.Message);
+            }
         }
-        content.Text = model.Text;
-        content.LastUpdate = DateTime.UtcNow;
-        _context.Entry(content).Property(p => p.Text).IsModified = true;
-        _context.Entry(content).Property(p => p.LastUpdate).IsModified = true;
-        await _context.SaveChangesAsync();
-        
-        var result = _mapper.Map<ContentViewModel>(content);
-        return Ok(result);
-      }
-      catch (Exception ex)
-      {
-        _logger.LogError("Failed to execute POST");
-        return StatusCode(500, ex.Message);
-      }
     }
-  }
 }

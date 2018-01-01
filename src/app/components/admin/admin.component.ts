@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material';
 import 'rxjs/add/operator/takeUntil';
 import { Subject } from 'rxjs/Subject';
 import { ContentState } from '../../store/Content';
-import { Page, UpdatedPage } from '../../store/Pages';
+import { Page, UpdatedPage } from '../../store/Page';
 import { ContentService } from '../../services/content/content.service';
 import { PageService } from '../../services/page/page.service';
 import { UserService } from '../../services/user/user.service';

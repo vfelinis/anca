@@ -12,26 +12,20 @@ using Newtonsoft.Json;
 using site;
 using site.Data;
 using site.Models;
-using site.Services.Localization;
+using site.Services;
 
 namespace site.ApiControllers
 {
     public class InitialStateController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly IInitialReduxStateService _initialStateService;
         private readonly ILogger<InitialStateController> _logger;
-        private readonly INewStringLocalizer _localizer;
         public InitialStateController(
-            ApplicationDbContext context,
-            IMapper mapper,
-            ILogger<InitialStateController> logger,
-            INewStringLocalizer localizer)
+            IInitialReduxStateService initialStateService,
+            ILogger<InitialStateController> logger)
         {
-            _context = context;
-            _mapper = mapper;
+            _initialStateService = initialStateService;
             _logger = logger;
-            _localizer = localizer;
         }
 
         [HttpGet]
@@ -39,16 +33,7 @@ namespace site.ApiControllers
         [Route("api/initialstate/script.js")]
         public async Task<JavaScriptResult> GetScript()
         {
-            List<PageViewModel> pages = _context.Pages.AsNoTracking().Select(_mapper.Map<PageViewModel>).ToList();
-            var settings = _context.Settings.AsNoTracking().Include(s => s.Cultures).FirstOrDefault();
-            InitialReduxState store = new InitialReduxState
-            {
-                LocaleState = await _localizer.GetLocale(true),
-                PagesState = new PagesState{
-                    Pages = pages
-                },
-                SettingState = _mapper.Map<SettingViewModel>(settings)
-            };
+            var store = await _initialStateService.GetInitialReduxStateAsync();
             var json = JsonConvert.SerializeObject(store);
             string script = $"window.initialReduxState = {json};";
             return new JavaScriptResult(script);

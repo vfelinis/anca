@@ -3,7 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import 'rxjs/add/operator/takeUntil';
 import { Subject } from 'rxjs/Subject';
-import { Page, UpdatedPage } from '../../../store/Pages';
+import { Page, UpdatedPage } from '../../../store/Page';
 import { ConfirmDialogComponent } from '../../common/confirm-dialog/confirm-dialog.component';
 
 @Component({

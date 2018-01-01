@@ -22,7 +22,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using AutoMapper;
 using System.Text;
 using Microsoft.Extensions.Localization;
-using site.Services.Localization;
+using site.Data.Stores;
 
 namespace site
 {
@@ -69,9 +69,18 @@ namespace site
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
-            services.AddTransient<IStringLocalizer, CustomStringLocalizer>();
-            services.AddSingleton<IStringLocalizerFactory>(new CustomStringLocalizerFactory(connection));
-            services.AddTransient<INewStringLocalizer, NewStringLocalizer>();
+            services.AddTransient<ICultureStore, CultureStore>();
+            services.AddTransient<IContentStore, ContentStore>();
+            services.AddTransient<IPageStore, PageStore>();
+            services.AddTransient<ISettingStore, SettingStore>();
+            services.AddTransient<IResourceStore, ResourceStore>();
+
+            services.AddTransient<ILocalizationService, LocalizationService>();
+            services.AddTransient<ISettingService, SettingService>();
+            services.AddTransient<IContentService, ContentService>();
+            services.AddTransient<IPageService, PageService>();
+            services.AddTransient<IInitialReduxStateService, InitialReduxStateService>();
+
 
             // services.AddLocalization(options => options.ResourcesPath = "Resources");
 
@@ -106,11 +115,7 @@ namespace site
             services.AddAutoMapper();
             
             services.AddMvc()
-                .AddDataAnnotationsLocalization(options =>
-                {
-                    options.DataAnnotationLocalizerProvider = (type, factory) =>
-                        factory.Create(null);
-                })
+                .AddDataAnnotationsLocalization()
                 .AddViewLocalization();
         }
 

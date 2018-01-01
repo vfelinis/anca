@@ -3,7 +3,7 @@ import { Action, ActionReducer } from '@ngrx/store';
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
-export interface PagesState {
+export interface PageState {
     pages: Page[];
 }
 
@@ -25,48 +25,51 @@ export interface UpdatedPage extends Page {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface AddPagesAction {
+interface AddPageAction {
     type: 'ADD_PAGE';
     payload: Page;
 }
 
-interface UpdatePagesAction {
+interface UpdatePageAction {
     type: 'UPDATE_PAGE';
     payload: Page;
 }
 
-interface DeletePagesAction {
+interface DeletePageAction {
     type: 'DELETE_PAGE';
     payload: number;
 }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = AddPagesAction | UpdatePagesAction | DeletePagesAction;
+type KnownAction = AddPageAction | UpdatePageAction | DeletePageAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
-export const pagesActionCreators = {
-    addPage: (page: Page) => <AddPagesAction>{ type: 'ADD_PAGE', payload: page },
-    updatePage: (page: Page) => <UpdatePagesAction>{ type: 'UPDATE_PAGE', payload: page },
-    deletePage: (pageId: number) => <DeletePagesAction>{ type: 'DELETE_PAGE', payload: pageId },
+export const pageActionCreators = {
+    addPage: (page: Page) => <AddPageAction>{ type: 'ADD_PAGE', payload: page },
+    updatePage: (page: Page) => <UpdatePageAction>{ type: 'UPDATE_PAGE', payload: page },
+    deletePage: (pageId: number) => <DeletePageAction>{ type: 'DELETE_PAGE', payload: pageId },
 };
 
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
-const unloadedState: PagesState = { pages: [] };
+const unloadedState: PageState = { pages: [] };
 
-export function pagesReducer(state: PagesState, action: KnownAction): PagesState {
+export function pageReducer(state: PageState, action: KnownAction): PageState {
     switch (action.type) {
         case 'ADD_PAGE':
-            return {...state, pages: [...state.pages, action.payload]};
+            return {pages: [...state.pages, action.payload].sort((a, b) => a.orderIndex - b.orderIndex)};
         case 'UPDATE_PAGE':
-            return {...state, pages: [...state.pages.filter(p => p.id !== action.payload.id), action.payload]};
+            return {pages: [
+                ...state.pages.filter(p => p.id !== action.payload.id),
+                action.payload
+            ].sort((a, b) => a.orderIndex - b.orderIndex)};
         case 'DELETE_PAGE':
-            return {...state, pages: [...state.pages.filter(p => p.id !== action.payload)]};
+            return {pages: [...state.pages.filter(p => p.id !== action.payload)]};
         default:
             return state || unloadedState;
     }
-};
+}

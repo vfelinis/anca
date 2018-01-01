@@ -4,8 +4,8 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/takeUntil';
 import { Subject } from 'rxjs/Subject';
 import { CookieService, CookieOptions } from 'ngx-cookie';
-import { SettingsState } from '../../store/Settings';
-import { SettingsService } from '../../services/settings/settings.service';
+import { SettingState } from '../../store/Setting';
+import { SettingService } from '../../services/setting/setting.service';
 import { LocalizationService } from '../../services/localization/localization.service';
 
 @Component({
@@ -17,11 +17,11 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
   private settingsForm: FormGroup;
   private languages: FormControl;
-  private settings: SettingsState;
+  private settings: SettingState;
   private currentLanguage = '';
   constructor(
     private cookieService: CookieService,
-    private settingsService: SettingsService,
+    private settingsService: SettingService,
     private localizationService: LocalizationService
   ) {
     this.settingsService.getSettings().takeUntil(this.ngUnsubscribe).subscribe(s => this.settings = s);

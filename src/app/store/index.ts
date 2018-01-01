@@ -8,19 +8,19 @@ import {
 import * as fromRouter from '@ngrx/router-store';
 import { RouterStateUrl } from '../utils/routerUtil';
 import { contentReducer, ContentState } from './Content';
-import { pagesReducer, PagesState } from './Pages';
+import { pageReducer, PageState } from './Page';
 import { localeReducer, LocaleState } from './Locale';
 import { userReducer, UserState } from './User';
-import { SettingsState, settingsReducer } from './Settings';
+import { SettingState, settingReducer } from './Setting';
 
 // The top-level state object
 export interface ApplicationState {
     routerState: fromRouter.RouterReducerState<RouterStateUrl>;
     contentState: ContentState;
-    pagesState: PagesState;
+    pageState: PageState;
     localeState: LocaleState;
     userState: UserState;
-    settingsState: SettingsState;
+    settingState: SettingState;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -29,8 +29,8 @@ export interface ApplicationState {
 export const reducers: ActionReducerMap<ApplicationState> = {
     routerState: fromRouter.routerReducer,
     contentState: contentReducer,
-    pagesState: pagesReducer,
+    pageState: pageReducer,
     localeState: localeReducer,
     userState: userReducer,
-    settingsState: settingsReducer
+    settingState: settingReducer
 };

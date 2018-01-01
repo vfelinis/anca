@@ -16,8 +16,9 @@ const initState = (window as any).initialReduxState as ApplicationState;
 
 const routes: Routes = [];
 
-if (initState && initState.pagesState && initState.pagesState.pages instanceof Array) {
-  initState.pagesState.pages.forEach(p => routes.push({ path: p.url,  component: ContentComponent }));
+if (initState && initState.pageState && initState.pageState.pages instanceof Array) {
+  initState.pageState.pages.sort((a, b) => a.orderIndex - b.orderIndex)
+    .forEach(p => routes.push({ path: p.url,  component: ContentComponent }));
 }
 
 routes.push({ path: 'login',  component: LoginComponent, canActivate: [LoginGuard] });

@@ -9,33 +9,32 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using site.Data;
 using site.Models;
+using site.Services;
 
 namespace site.ApiControllers
 {
 
     [Route("api/pages")]
-    public class PagesController : Controller
+    public class PageController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly ILogger<PagesController> _logger;
+        private readonly IPageService _pageService;
+        private readonly ILogger<PageController> _logger;
 
-        public PagesController(
-          ApplicationDbContext context,
+        public PageController(
+          IPageService pageService,
           IMapper mapper,
-          ILogger<PagesController> logger)
+          ILogger<PageController> logger)
         {
-            _context = context;
-            _mapper = mapper;
+            _pageService = pageService;
             _logger = logger;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
             try
             {
-                var result = _context.Pages.AsNoTracking().Select(_mapper.Map<PageViewModel>).ToList();
+                var result = await _pageService.GetPagesAsync();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -52,41 +51,9 @@ namespace site.ApiControllers
             try
             {
                 if (!ModelState.IsValid)
-                {
                     return BadRequest(ModelState);
-                }
-                var date = DateTime.UtcNow;
-                var page = new Page
-                {
-                    Name = model.Name,
-                    Url = model.Url,
-                    OrderIndex = model.OrderIndex,
-                    DateCreated = date,
-                    LastUpdate = date,
-                    Active = model.Active
-                };
 
-                var cultures = await _context.Cultures.ToListAsync();
-                var contents = new List<Content>();
-                foreach (var culture in cultures)
-                {
-                    contents.Add(
-                      new Content
-                      {
-                          Text = string.Empty,
-                          DateCreated = date,
-                          LastUpdate = date,
-                          Page = page,
-                          Culture = culture
-                      }
-                    );
-                }
-
-                await _context.Pages.AddAsync(page);
-                await _context.Contents.AddRangeAsync(contents);
-                await _context.SaveChangesAsync();
-
-                var result = _mapper.Map<PageViewModel>(page);
+                var result = await _pageService.CreatePageAsync(model);
                 return Created($"/{model.Url}", result);
             }
             catch (Exception ex)
@@ -103,26 +70,11 @@ namespace site.ApiControllers
             try
             {
                 if (!ModelState.IsValid)
-                {
                     return BadRequest(ModelState);
-                }
-                var page = await _context.Pages.FirstOrDefaultAsync(p => p.Id == model.Id);
-                if (page == null)
-                {
+
+                model = await _pageService.UpdatePageAsync(model);
+                if (model == null)
                     return StatusCode(404, "Page was not found");
-                }
-                page.Name = model.Name;
-                page.Active = model.Active;
-                page.OrderIndex = model.OrderIndex;
-                page.LastUpdate = DateTime.UtcNow;
-
-                if (!string.IsNullOrWhiteSpace(model.Url))
-                {
-                    page.Url = model.Url;
-                }
-
-                _context.Entry(page).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
 
                 return Ok(model);
             }
@@ -139,13 +91,10 @@ namespace site.ApiControllers
         {
             try
             {
-                var page = await _context.Pages.FindAsync(id);
+                var page = await _pageService.DeletePageAsync(id);
                 if (page == null)
-                {
                     return StatusCode(404, "Page was not found");
-                }
-                _context.Pages.Remove(page);
-                await _context.SaveChangesAsync();
+
                 return Ok(page);
             }
             catch (Exception ex)

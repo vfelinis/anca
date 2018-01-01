@@ -13,13 +13,13 @@ namespace site.Models
     {
         [JsonProperty("localeState")]
         public LocaleViewModel LocaleState { get; set; }
-        [JsonProperty("pagesState")]
-        public PagesState PagesState { get; set; }
-        [JsonProperty("settingsState")]
+        [JsonProperty("pageState")]
+        public PageState PageState { get; set; }
+        [JsonProperty("settingState")]
         public SettingViewModel SettingState { get; set; }
     }
 
-    public class PagesState{
+    public class PageState{
         [JsonProperty("pages")]
         public List<PageViewModel> Pages { get; set; }
     }

@@ -18,16 +18,21 @@ interface SetContentAction {
     payload: ContentState;
 }
 
+interface CleanContentAction {
+    type: 'CLEAN_CONTENT';
+}
+
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = SetContentAction;
+type KnownAction = SetContentAction | CleanContentAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const contentActionCreators = {
-    setContent: (contentState: ContentState) => <SetContentAction>{ type: 'SET_CONTENT', payload: contentState }
+    setContent: (contentState: ContentState) => <SetContentAction>{ type: 'SET_CONTENT', payload: contentState },
+    cleanContent: () => <CleanContentAction>{ type: 'CLEAN_CONTENT' }
 };
 
 // ----------------
@@ -38,7 +43,9 @@ export function contentReducer(state: ContentState, action: KnownAction): Conten
     switch (action.type) {
         case 'SET_CONTENT':
             return action.payload;
+        case 'CLEAN_CONTENT':
+            return unloadedState;
         default:
             return state || unloadedState;
     }
-};
+}

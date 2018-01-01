@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Page } from '../../../store/Pages';
+import { Page } from '../../../store/Page';
 import { PageService } from '../../../services/page/page.service';
 
 @Component({
