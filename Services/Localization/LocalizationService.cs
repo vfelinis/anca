@@ -114,13 +114,23 @@ namespace site.Services
                     resource.Key = resources["key"];
                     resource.Value = resources[lang];
                 }
-                else{
-                    resource = new Resource{
-                      Key = resources["key"],
-                      Value = resources[lang],
-                      CultureId = resourcesList.First().CultureId
-                    };
-                    newResourcesList.Add(resource);
+                else
+                {
+                    var culture = await _cultureStore.GetCultureByLanguageAsync(lang);
+                    if (culture != null)
+                    {
+                        resource = new Resource
+                        {
+                            Key = resources["key"],
+                            Value = resources[lang],
+                            CultureId = culture.Id
+                        };
+                        newResourcesList.Add(resource);
+                    }
+                    else
+                    {
+                        resources.Remove(lang);
+                    }
                 }
             }
             await _resourceStore.CreateResourcesAsync(newResourcesList);
