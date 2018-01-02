@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/map';
 import { Subject } from 'rxjs/Subject';
 import { Page } from '../../store/Page';
 import { UserState } from '../../store/User';
@@ -31,6 +32,10 @@ export class NavComponent implements OnInit, OnDestroy {
     this.settingsService.getSettings().takeUntil(this.ngUnsubscribe).subscribe(s => this.settings = s);
   }
 
+  get Pages(): Page[] {
+    return this.pages.filter(m => m.active || this.user.role.some(r => r === 'admin'));
+  }
+
   ngOnInit() { }
 
   ngOnDestroy() {
@@ -40,5 +45,9 @@ export class NavComponent implements OnInit, OnDestroy {
 
   logout() {
     this.userService.logout();
+  }
+
+  showSettings(): boolean {
+    return this.settings.languages.length > 1;
   }
 }

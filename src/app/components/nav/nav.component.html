@@ -10,12 +10,12 @@
     <!-- This fills the remaining space of the current row -->
     <!-- <span class="fill-remaining-space"></span> -->
     <div fxLayout="row" fxShow="false" fxShow.gt-sm class="fill-remaining-space">
-        <button mat-button *ngFor="let page of pages" routerLink="{{page.url}}" [appLocalize]="page.name">
+        <button mat-button *ngFor="let page of Pages" routerLink="{{page.url}}">
+            <span [appLocalize]="page.name"></span>
         </button>
-
         <div fxLayout="column" fxFlex.gt-sm="100%">
             <div fxFlexAlign="end">
-                <button mat-button routerLink="settings">
+                <button *ngIf="showSettings()" mat-button routerLink="settings">
                     <mat-icon>settings</mat-icon>
                     <span [appLocalize]="'Settings'"></span>
                 </button>
@@ -44,9 +44,9 @@
 
 </mat-toolbar>
 <mat-menu #menu="matMenu">
-    <button mat-menu-item *ngFor="let page of pages" routerLink="{{page.url}}" [appLocalize]="page.name">
+    <button mat-menu-item *ngFor="let page of Pages" routerLink="{{page.url}}" [appLocalize]="page.name">
     </button>
-    <button mat-button routerLink="settings" [appLocalize]="'Settings'">
+    <button *ngIf="showSettings()" mat-button routerLink="settings" [appLocalize]="'Settings'">
     </button>
     <div *ngIf="user.email; then profileMenu else loginMenu"></div>
     <ng-template #profileMenu>

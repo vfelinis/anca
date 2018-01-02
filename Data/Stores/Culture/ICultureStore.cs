@@ -8,8 +8,6 @@ namespace site.Data.Stores
     public interface ICultureStore
     {
         Task<List<Culture>> GetCultures();
-        Task<int> CountActiveCulturesAsync();
-        Task<Culture> GetActiveCultureAsync();
         Task<List<Culture>> GetActiveCulturesAsync();
         Task<Culture> GetCultureByLanguageAsync(string language);
     }

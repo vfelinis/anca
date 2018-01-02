@@ -59,8 +59,9 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
       const updatedSettings: SettingState = {
         id: this.settings.id,
         companyName: this.companyName.value,
+        defaultLanguage: this.settings.defaultLanguage,
         languages: this.languages.value,
-        supportedLanguages: null
+        supportedLanguages: this.settings.supportedLanguages
       };
       this.settingsService.update(updatedSettings);
     }

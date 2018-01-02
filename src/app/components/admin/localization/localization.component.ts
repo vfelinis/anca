@@ -79,7 +79,7 @@ export class LocalizationComponent implements OnInit, OnDestroy {
   }
 
   onCreateConfirm(event) {
-    if (!!event.newData.key && this.table.source.some(s => s.key !==  event.newData.key)) {
+    if (!!event.newData.key && !this.table.source.some(s => s.key ===  event.newData.key)) {
       this.localizationService.createResources(event.newData);
     }
   }

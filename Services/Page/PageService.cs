@@ -48,7 +48,7 @@ namespace site.Services
                 contents.Add(
                   new Content
                   {
-                      Text = string.Empty,
+                      Text = culture.Language,
                       DateCreated = date,
                       LastUpdate = date,
                       Page = page,

@@ -30,7 +30,9 @@ namespace site
                     var context = services.GetRequiredService<ApplicationDbContext>();
                     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                     var rolesManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                    DbInitializer.InitializeAsync(context, userManager, rolesManager).Wait();
+                    var configuration = services.GetRequiredService<IConfiguration>();
+
+                    DbInitializer.InitializeAsync(context, userManager, rolesManager, configuration).Wait();
                 }
                 catch (Exception ex)
                 {

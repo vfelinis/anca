@@ -71,24 +71,19 @@ namespace site.Services
         public async Task<LocaleViewModel> GetLocale(bool onlyCurrentLanguage = false)
         {
             LocaleViewModel locale = null;
-            if (await _cultureStore.CountActiveCulturesAsync() == 1)
+            var lang = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+            if (onlyCurrentLanguage)
             {
-                var data = await _cultureStore.GetActiveCultureAsync();
-                locale = GetLocale(data?.Language, new List<Culture> { data });
+                var culture = await _cultureStore.GetCultureByLanguageAsync(lang);
+                locale = GetLocale(culture.Language, new List<Culture> { culture });
             }
             else
             {
-                var lang = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-                if (onlyCurrentLanguage)
-                {
-                    var data = await _cultureStore.GetCultureByLanguageAsync(lang);
-                    locale = GetLocale(lang, new List<Culture> { data });
-                }
-                else
-                {
-                    var data = await _cultureStore.GetActiveCulturesAsync();
-                    locale = GetLocale(lang, data);
-                }
+                var cultures = await _cultureStore.GetActiveCulturesAsync();
+                lang = cultures.Any(c => c.Language == lang)
+                    ? lang
+                    : cultures.FirstOrDefault()?.Setting.DefaultLanguage;
+                locale = GetLocale(lang, cultures);
             }
             return locale;
         }
@@ -107,18 +102,28 @@ namespace site.Services
             var oldKey = resources["oldKey"];
             var languages = resources.Keys.Where(k => k != "key" && k != "oldKey").ToList();
             var resourcesList = await _resourceStore.GetResourcesByKeyAndLanguagesAsync(oldKey, languages);
+            var newResourcesList = new List<Resource>();
             if (resourcesList.Count == 0)
                 return new Dictionary<string, string> { ["error"] = "resources were not found" };
 
             foreach (var lang in languages)
             {
                 var resource = resourcesList.FirstOrDefault(r => r.Culture.Language == lang);
-                if (resources != null)
+                if (resource != null)
                 {
                     resource.Key = resources["key"];
                     resource.Value = resources[lang];
                 }
+                else{
+                    resource = new Resource{
+                      Key = resources["key"],
+                      Value = resources[lang],
+                      CultureId = resourcesList.First().CultureId
+                    };
+                    newResourcesList.Add(resource);
+                }
             }
+            await _resourceStore.CreateResourcesAsync(newResourcesList);
             await _resourceStore.UpdateResourcesAsync(resourcesList);
             return resources;
         }
@@ -133,7 +138,8 @@ namespace site.Services
 
             data.ForEach(c =>
             {
-                var dict = c.Resources.ToDictionary(x => x.Key, x => x.Value);
+                // protection from duplicates if there are they
+                var dict = c.Resources.GroupBy(r => r.Key).ToDictionary(x => x.Key, x => x.FirstOrDefault().Value);
                 result.Locales.Add(c.Language, dict);
             });
             return result;

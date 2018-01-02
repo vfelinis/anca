@@ -33,7 +33,9 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
       this.currentLanguage = this.settings.languages[0];
     } else if (!!cookieCulture) {
       const curLang = cookieCulture.substr(-2);
-      this.currentLanguage = this.settings.languages.some(l => l === curLang) ? curLang : '';
+      this.currentLanguage = this.settings.languages.some(l => l === curLang)
+        ? curLang
+        : this.settings.defaultLanguage;
     }
     this.languages = new FormControl(this.currentLanguage);
     this.settingsForm = new FormGroup({

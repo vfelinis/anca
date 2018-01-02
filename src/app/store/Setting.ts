@@ -6,6 +6,7 @@ import { Action, ActionReducer } from '@ngrx/store';
 export interface SettingState {
     id: number;
     companyName: string;
+    defaultLanguage: string;
     languages: string[];
     supportedLanguages: string[];
 }
@@ -34,7 +35,7 @@ export const settingActionCreators = {
 
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
-const unloadedState: SettingState = { id: 0, companyName: '', languages: [], supportedLanguages: [] };
+const unloadedState: SettingState = { id: 0, companyName: '', defaultLanguage: '', languages: [], supportedLanguages: [] };
 
 export function settingReducer(state: SettingState, action: KnownAction): SettingState {
     switch (action.type) {

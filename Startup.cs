@@ -31,6 +31,7 @@ namespace site
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            
         }
 
         public IConfiguration Configuration { get; }
@@ -132,14 +133,14 @@ namespace site
                 app.UseExceptionHandler("/Error");
             }
 
-            var supportedCultures = new[]
-            {
-                new CultureInfo("en"),
-                new CultureInfo("ru")
-            };
+            var supportedLanguages = Configuration["SupportedLanguages"]?.Split(',')
+                .Select(s => s.Trim()).ToList() ?? new List<string>{"en"};
+            var defaultLanguage = supportedLanguages[0];
+
+            var supportedCultures = supportedLanguages?.Select(c => new CultureInfo(c)).ToList();
             app.UseRequestLocalization(new RequestLocalizationOptions
             {
-                DefaultRequestCulture = new RequestCulture("en"),
+                DefaultRequestCulture = new RequestCulture(defaultLanguage),
                 SupportedCultures = supportedCultures,
                 SupportedUICultures = supportedCultures
             });

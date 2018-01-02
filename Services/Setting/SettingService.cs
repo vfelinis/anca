@@ -36,7 +36,8 @@ namespace site.Services
                 return null;
 
             setting.CompanyName = settingViewModel.CompanyName;
-            setting.Cultures.ForEach(c => c.IsActive = settingViewModel.Languages.Contains(c.Language));
+            setting.Cultures.ForEach(c => 
+                c.IsActive = settingViewModel.Languages.Contains(c.Language) || c.Language == setting.DefaultLanguage);
             await _settingsStore.UpdateSettingAsync(setting);
             var result = _mapper.Map<SettingViewModel>(setting);
             return result;

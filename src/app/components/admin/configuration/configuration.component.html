@@ -6,7 +6,7 @@
   </mat-form-field>
   <mat-form-field>
     <mat-select [formControl]="languages" multiple>
-      <mat-option *ngFor="let lang of settings.supportedLanguages" [value]="lang">
+      <mat-option *ngFor="let lang of settings.supportedLanguages" [value]="lang" [disabled]="lang === settings.defaultLanguage">
         <span [appLocalize]="lang"></span>
       </mat-option>
     </mat-select>

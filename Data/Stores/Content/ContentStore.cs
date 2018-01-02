@@ -22,8 +22,15 @@ namespace site.Data.Stores
 
         public async Task<Content> GetContentByPageAndLanguageAsync(int pageId, string language)
         {
-            var content = await _context.Contents.AsNoTracking().Include(c => c.Culture)
-                .FirstOrDefaultAsync(c => c.PageId == pageId && c.Culture.Language == language);
+            var contents = await _context.Contents.AsNoTracking()
+                .Include(c => c.Culture).ThenInclude(culture => culture.Setting)
+                .Where(c => c.PageId == pageId && c.Culture.IsActive
+                    && (c.Culture.Language == language
+                        || c.Culture.Language == c.Culture.Setting.DefaultLanguage))
+                .ToListAsync();
+            var content = contents.Count == 1
+                ? contents.FirstOrDefault()
+                : contents.FirstOrDefault(c => c.Culture.Language == language);
             return content;
         }
 

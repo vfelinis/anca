@@ -6,18 +6,23 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace site.Data
 {
     public static class DbInitializer
     {
-        public static async Task InitializeAsync(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task InitializeAsync(
+            ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            IConfiguration configuration)
         {
             context.Database.EnsureCreated();//if db is not exist ,it will create database .but ,do nothing .
-            string adminEmail = "admin@admin";
-            string adminPassword = "admin";
-            string userEmail = "user@user";
-            string userPassword = "user";
+            string adminEmail = configuration["AdminEmail"];
+            string adminPassword = configuration["AdminPassword"];
+            string userEmail = configuration["UserEmail"];
+            string userPassword = configuration["UserPassword"];
             if (await roleManager.FindByNameAsync("admin") == null)
             {
                 await roleManager.CreateAsync(new IdentityRole("admin"));
@@ -45,8 +50,10 @@ namespace site.Data
                     await userManager.AddToRoleAsync(user, "user");
                 }
             }
-
-            var setting = await context.Settings.AsNoTracking().FirstOrDefaultAsync();
+            var setting = await context.Settings.FirstOrDefaultAsync();
+            var supportedLanguages = configuration["SupportedLanguages"]?.Split(',')
+                .Select(s => s.Trim()).ToList() ?? new List<string> { "en" };
+            var defaultLanguage = supportedLanguages[0];
             if (setting == null)
             {
                 setting = new Setting
@@ -54,36 +61,17 @@ namespace site.Data
                     CompanyName = "CompanyName"
                 };
                 await context.Settings.AddAsync(setting);
+            }
+            setting.DefaultLanguage = defaultLanguage;
 
-                var cultureRU = new Culture
-                {
-                    Language = "ru",
-                    IsActive = true,
-                    Setting = setting
-                };
-                var cultureEN = new Culture
-                {
-                    Language = "en",
-                    IsActive = true,
-                    Setting = setting
-                };
-                await context.Cultures.AddRangeAsync(new List<Culture> { cultureRU, cultureEN });
-
-                var resourceRU = new Resource
-                {
-                    Key = "Admin Panel",
-                    Value = "Панель управления",
-                    Culture = cultureRU
-                };
-                var resourceEN = new Resource
-                {
-                    Key = "Admin Panel",
-                    Value = "Admin Panel",
-                    Culture = cultureEN
-                };
-                await context.Resources.AddRangeAsync(new List<Resource> { resourceRU, resourceEN });
-
-                var date = DateTime.UtcNow;
+            var cultures = await context.Cultures.ToListAsync();
+            var pages = await context.Pages
+                .Include(p => p.Contents)
+                    .ThenInclude(content => content.Culture)
+                .ToListAsync();
+            var date = DateTime.UtcNow;
+            if (!pages.Any(p => p.Url == string.Empty))
+            {
                 var homePage = new Page
                 {
                     Name = "Home",
@@ -94,28 +82,38 @@ namespace site.Data
                     Active = true
                 };
                 await context.AddAsync(homePage);
-
-                var contentRU = new Content
-                {
-                    Text = "Главная",
-                    DateCreated = date,
-                    LastUpdate = date,
-                    Page = homePage,
-                    Culture = cultureRU
-                };
-
-                var contentEN = new Content
-                {
-                    Text = "Home",
-                    DateCreated = date,
-                    LastUpdate = date,
-                    Page = homePage,
-                    Culture = cultureEN
-                };
-                await context.AddRangeAsync(new List<Content> { contentRU, contentEN });
-
-                await context.SaveChangesAsync();
+                pages.Add(homePage);
             }
+            foreach (var lang in supportedLanguages)
+            {
+                var culture = cultures.FirstOrDefault(c => c.Language == lang);
+                if (culture == null)
+                {
+                    culture = new Culture
+                    {
+                        Language = lang,
+                        IsActive = lang == defaultLanguage,
+                        Setting = setting
+                    };
+                    await context.Cultures.AddAsync(culture);
+                }
+                foreach (var page in pages)
+                {
+                    if (!page.Contents.Any(c => c.Culture.Language == lang))
+                    {
+                        var content = new Content
+                        {
+                            Text = lang,
+                            DateCreated = date,
+                            LastUpdate = date,
+                            Page = page,
+                            Culture = culture
+                        };
+                        await context.Contents.AddAsync(content);
+                    }
+                }
+            }
+            await context.SaveChangesAsync();
         }
     }
 }
