@@ -21,10 +21,10 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
   private currentLanguage = '';
   constructor(
     private cookieService: CookieService,
-    private settingsService: SettingService,
+    private settingService: SettingService,
     private localizationService: LocalizationService
   ) {
-    this.settingsService.getSettings().takeUntil(this.ngUnsubscribe).subscribe(s => this.settings = s);
+    this.settingService.getSettings().takeUntil(this.ngUnsubscribe).subscribe(s => this.settings = s);
   }
 
   ngOnInit() {

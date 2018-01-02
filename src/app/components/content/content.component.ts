@@ -7,6 +7,7 @@ import { Page } from '../../store/Page';
 import { ContentService } from '../../services/content/content.service';
 import { PageService } from '../../services/page/page.service';
 import { UserService } from '../../services/user/user.service';
+import { LocalizationService } from '../../services/localization/localization.service';
 
 @Component({
   selector: 'app-content',
@@ -16,6 +17,7 @@ import { UserService } from '../../services/user/user.service';
 export class ContentComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
   private content: ContentState;
+  private currentLanguage: string;
   private editableText: string;
   private page: Page;
   private isAdmin: boolean;
@@ -23,24 +25,29 @@ export class ContentComponent implements OnInit, OnDestroy {
   constructor(
     private contentService: ContentService,
     private pageService: PageService,
-    private userService: UserService
+    private userService: UserService,
+    private localizationService: LocalizationService
   ) {
     this.contentService.getContent().takeUntil(this.ngUnsubscribe).subscribe(c => this.content = c);
+    this.localizationService.getLocale().takeUntil(this.ngUnsubscribe).subscribe(s => this.currentLanguage = s.currentLanguage);
     this.pageService.getPageByCurrentRoute().takeUntil(this.ngUnsubscribe).subscribe(p => this.page = p);
     this.userService.isAdmin().takeUntil(this.ngUnsubscribe).subscribe(a => this.isAdmin = a);
   }
 
-  public options: Object = {
-    charCounterCount: false,
-    imageInsertButtons: ['imageBack', '|', 'imageByURL'],
-    videoInsertButtons: ['videoBack', '|', 'videoByURL'],
-    events : {
-      'froalaEditor.file.beforeUpload' : function(e, editor, response) {
-        alert('File upload is disabled');
-        return false;
-      }
-    }
-  };
+  get Options(): Object {
+    return {
+      charCounterCount: false,
+      imageInsertButtons: ['imageBack', '|', 'imageByURL'],
+      videoInsertButtons: ['videoBack', '|', 'videoByURL'],
+      events: {
+        'froalaEditor.file.beforeUpload': function (e, editor, response) {
+          alert('File upload is disabled');
+          return false;
+        }
+      },
+      language: this.currentLanguage
+    };
+  }
 
   ngOnInit() {
     this.contentService.fetchContent(this.page.id);
