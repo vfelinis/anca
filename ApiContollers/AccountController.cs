@@ -47,7 +47,7 @@ namespace site.ApiControllers
         [TempData]
         public string ErrorMessage { get; set; }
 
-        [HttpPost("api/account/login")]
+        /*[HttpPost("api/account/login")]
         [AllowAnonymous]
         public async Task Login([FromBody]LoginViewModel model)
         {
@@ -90,7 +90,7 @@ namespace site.ApiControllers
             await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
         }
 
-        /*[HttpGet]
+        [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
         {

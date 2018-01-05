@@ -32,6 +32,7 @@ import { UserSettingsComponent } from './components/user-settings/user-settings.
 
 import { AdminComponent } from './components/admin/admin.component';
 import { PageManagementComponent } from './components/admin/page-management/page-management.component';
+import { PageManagementItemComponent } from './components/admin/page-management/page-management-item/page-management-item.component';
 import { PageCreationComponent } from './components/admin/page-creation/page-creation.component';
 import { ConfigurationComponent } from './components/admin/configuration/configuration.component';
 import { LocalizationComponent } from './components/admin/localization/localization.component';
@@ -59,6 +60,7 @@ const initState = (window as any).initialReduxState as ApplicationState;
     LoginComponent,
     AdminComponent,
     PageManagementComponent,
+    PageManagementItemComponent,
     PageCreationComponent,
     ConfirmDialogComponent,
     ErrorComponent,

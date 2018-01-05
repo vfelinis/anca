@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AspNet.Security.OpenIdConnect.Primitives;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -38,7 +39,12 @@ namespace site.Data
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(admin, "admin");
-                    await userManager.AddClaimAsync(admin, new Claim(ClaimTypes.Role, "admin"));
+                    await userManager.AddToRoleAsync(admin, "user");
+                    await userManager.AddClaimsAsync(admin, new List<Claim>{
+                        // new Claim(OpenIdConnectConstants.Claims.Name, adminEmail),
+                        // new Claim(OpenIdConnectConstants.Claims.Role, "admin"),
+                        new Claim(OpenIdConnectConstants.Claims.Email, adminEmail)
+                    });
                 }
             }
             if (await userManager.FindByNameAsync(userEmail) == null)
@@ -48,6 +54,11 @@ namespace site.Data
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, "user");
+                    await userManager.AddClaimsAsync(user, new List<Claim>{
+                        // new Claim(OpenIdConnectConstants.Claims.Name, userEmail),
+                        // new Claim(OpenIdConnectConstants.Claims.Role, "user"),
+                        new Claim(OpenIdConnectConstants.Claims.Email, userEmail)
+                    });
                 }
             }
             var setting = await context.Settings.FirstOrDefaultAsync();

@@ -23,13 +23,13 @@ export class AuthHttpInterceptor implements HttpInterceptor {
                 success => {},
                 (error: HttpErrorResponse) => {
                     if (error.status === 401 || error.status === 403) {
+                        debugger;
                         const userService = this.inj.get(UserService);
                         userService.unauthorized();
                     }
                 }
             );
         }
-        // if it's not a Github API request, we just handle it to the next handler
         return next.handle(req);
     }
 }

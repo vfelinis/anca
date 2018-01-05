@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { URLSearchParams } from '@angular/http';
+import jwt_decode from 'jwt-decode';
 import { ApplicationState } from '../../store';
 import { UserState, userActionCreators } from '../../store/User';
 import { setItemLS, getItemLS, removeItemLS, setItemSS, getItemSS, removeItemSS } from '../../utils/localStorageUtil';
@@ -23,20 +25,35 @@ export class UserService {
   }
 
   login(email: string, password: string, rememberMe: boolean) {
-    const body = JSON.stringify({ email: email, password: password, rememberMe: rememberMe });
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json;charset=utf-8' });
-    this.http.post(`api/account/login`, body, { headers: headers }).subscribe((user: UserState) => {
-        this.store.dispatch(userActionCreators.setUser(user));
-        const userJSON = JSON.stringify(user);
-        if (rememberMe) {
-          removeItemSS('user');
-          setItemLS('user', userJSON);
-        } else {
-          removeItemLS('user');
-          setItemSS('user', userJSON);
-        }
-        this.router.navigate(['/']);
-      },
+    const data = {
+      grant_type: 'password',
+      scope: 'openid email profile roles',
+      username: email,
+      password: password
+    };
+    const params = new URLSearchParams();
+    Object.keys(data)
+      .forEach(key => params.append(key, data[key]));
+    const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+    this.http.post('api/token', params.toString(), { headers: headers }).subscribe((res: any) => {
+      const userData = jwt_decode(res.id_token);
+      const user: UserState = {
+        email: userData.email,
+        username: userData.name,
+        role: Array.isArray(userData.role) ? userData.role : [userData.role],
+        token: res.access_token
+      };
+      this.store.dispatch(userActionCreators.setUser(user));
+      const userJSON = JSON.stringify(user);
+      if (rememberMe) {
+        removeItemSS('user');
+        setItemLS('user', userJSON);
+      } else {
+        removeItemLS('user');
+        setItemSS('user', userJSON);
+      }
+      this.router.navigate(['/']);
+    },
       (error: any) => console.log(error)
     );
   }

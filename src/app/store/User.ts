@@ -4,11 +4,9 @@ import { Action, ActionReducer } from '@ngrx/store';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface UserState {
-    id: string;
     email: string;
     username: string;
     role: string[];
-    language: string;
     token: string;
 }
 
@@ -41,7 +39,7 @@ export const userActionCreators = {
 
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
-const unloadedState: UserState = { id: '', email: '', username: '', role: [], language: '', token: '' };
+const unloadedState: UserState = { email: '', username: '', role: [], token: '' };
 
 export function userReducer(state: UserState, action: KnownAction): UserState {
     switch (action.type) {

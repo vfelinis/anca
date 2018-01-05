@@ -18,25 +18,17 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
   private settingsForm: FormGroup;
   private languages: FormControl;
   private settings: SettingState;
-  private currentLanguage = '';
+  private currentLanguage: string;
   constructor(
     private cookieService: CookieService,
     private settingService: SettingService,
     private localizationService: LocalizationService
   ) {
     this.settingService.getSettings().takeUntil(this.ngUnsubscribe).subscribe(s => this.settings = s);
+    this.localizationService.getLocale().takeUntil(this.ngUnsubscribe).subscribe(s => this.currentLanguage = s.currentLanguage);
   }
 
   ngOnInit() {
-    const cookieCulture = this.cookieService.get('.AspNetCore.Culture');
-    if (this.settings.languages.length === 1) {
-      this.currentLanguage = this.settings.languages[0];
-    } else if (!!cookieCulture) {
-      const curLang = cookieCulture.substr(-2);
-      this.currentLanguage = this.settings.languages.some(l => l === curLang)
-        ? curLang
-        : this.settings.defaultLanguage;
-    }
     this.languages = new FormControl(this.currentLanguage);
     this.settingsForm = new FormGroup({
       languages: this.languages
@@ -62,7 +54,6 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
         `c=${this.languages.value}|uic=${this.languages.value}`,
         cookieOptions
       );
-      this.currentLanguage = this.languages.value;
       this.localizationService.fetchLocale(true);
     }
   }

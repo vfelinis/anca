@@ -1,33 +1,13 @@
 <div id="primary-header" class="mat-h1">
   <span [appLocalize]="'Admin Panel'"></span>
 </div>
-<mat-tab-group class="tab-group">
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <span [appLocalize]="'Configuration'"></span>
-    </ng-template>
-    <div class="tab-content">
-      <app-configuration></app-configuration>
-    </div>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <span [appLocalize]="'Pages'"></span>
-    </ng-template>
-    <div class="tab-content">
-      <div class="min-margin">
-        <button (click)="onCreate()" mat-raised-button color="primary" [appLocalize]="'New page'"></button>
-      </div>
-      <app-page-management *ngFor="let page of pages" [page]="page" (onSave)="onSave($event)" (onDelete)="onDelete($event)">
-      </app-page-management>
-    </div>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <span [appLocalize]="'Localization'"></span>
-    </ng-template>
-    <div class="tab-content">
-      <app-localization></app-localization>
-    </div>
-  </mat-tab>
-</mat-tab-group>
+<nav mat-tab-nav-bar>
+  <a mat-tab-link
+      *ngFor="let navLink of navLinks"
+       [routerLink]="navLink.link"
+       routerLinkActive #rla="routerLinkActive"
+        [active]="rla.isActive">
+       <span [appLocalize]="navLink.label"></span>
+   </a>
+</nav>
+<router-outlet></router-outlet>

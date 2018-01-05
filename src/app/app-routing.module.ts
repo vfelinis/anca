@@ -6,6 +6,9 @@ import { LoginComponent } from './components/login/login.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { ErrorComponent } from './components/error/error.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
+import { ConfigurationComponent } from './components/admin/configuration/configuration.component';
+import { PageManagementComponent } from './components/admin/page-management/page-management.component';
+import { LocalizationComponent } from './components/admin/localization/localization.component';
 
 import { LoginGuard } from './guards/login/login.guard';
 import { AdminGuard } from './guards/admin/admin.guard';
@@ -13,6 +16,12 @@ import { AdminGuard } from './guards/admin/admin.guard';
 import { ApplicationState } from './store/index';
 
 const initState = (window as any).initialReduxState as ApplicationState;
+
+const childRoutes: Routes = [
+  { path: 'configuration', component: ConfigurationComponent},
+  { path: 'pages', component: PageManagementComponent},
+  { path: 'localization', component: LocalizationComponent}
+];
 
 const routes: Routes = [];
 
@@ -22,7 +31,7 @@ if (initState && initState.pageState && initState.pageState.pages instanceof Arr
 }
 
 routes.push({ path: 'login',  component: LoginComponent, canActivate: [LoginGuard] });
-routes.push({ path: 'admin',  component: AdminComponent, canActivate: [AdminGuard] });
+routes.push({ path: 'admin',  component: AdminComponent, children: childRoutes, canActivate: [AdminGuard] });
 routes.push({ path: 'settings',  component: UserSettingsComponent });
 routes.push({ path: '**', component: ErrorComponent });
 

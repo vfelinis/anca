@@ -23,6 +23,7 @@ using AutoMapper;
 using System.Text;
 using Microsoft.Extensions.Localization;
 using site.Data.Stores;
+using AspNet.Security.OpenIdConnect.Primitives;
 
 namespace site
 {
@@ -51,8 +52,10 @@ namespace site
             });
 
             var connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(connection));
+            services.AddDbContext<ApplicationDbContext>(options => {
+                options.UseSqlite(connection);
+                options.UseOpenIddict();
+            });
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
@@ -82,36 +85,46 @@ namespace site
             services.AddTransient<IPageService, PageService>();
             services.AddTransient<IInitialReduxStateService, InitialReduxStateService>();
 
+            // Configure Identity to use the same JWT claims as OpenIddict instead
+            // of the legacy WS-Federation claims it uses by default (ClaimTypes),
+            // which saves you from doing the mapping in your authorization controller.
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.ClaimsIdentity.UserNameClaimType = OpenIdConnectConstants.Claims.Name;
+                options.ClaimsIdentity.UserIdClaimType = OpenIdConnectConstants.Claims.Subject;
+                options.ClaimsIdentity.RoleClaimType = OpenIdConnectConstants.Claims.Role;
+            });
 
-            // services.AddLocalization(options => options.ResourcesPath = "Resources");
+            // Register the OpenIddict services.
+            // Note: use the generic overload if you need
+            // to replace the default OpenIddict entities.
+            services.AddOpenIddict(options =>
+            {
+                // Register the Entity Framework stores.
+                options.AddEntityFrameworkCoreStores<ApplicationDbContext>();
 
+                // Register the ASP.NET Core MVC binder used by OpenIddict.
+                // Note: if you don't call this method, you won't be able to
+                // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
+                options.AddMvcBinders();
+
+                // Enable the token endpoint (required to use the password flow).
+                options.EnableTokenEndpoint("/api/token");
+
+                // Allow client applications to use the grant_type=password flow.
+                options.AllowPasswordFlow();
+
+                // During development, you can disable the HTTPS requirement.
+                options.DisableHttpsRequirement();
+            });
+
+            // Register the OAuth2 validation handler.
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-                {
-                    options.RequireHttpsMetadata = true;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        // укзывает, будет ли валидироваться издатель при валидации токена
-                        ValidateIssuer = true,
-                        // строка, представляющая издателя
-                        ValidIssuer = AuthOptions.ISSUER,
-
-                        // будет ли валидироваться потребитель токена
-                        ValidateAudience = true,
-                        // установка потребителя токена
-                        ValidAudience = AuthOptions.AUDIENCE,
-                        // будет ли валидироваться время существования
-                        ValidateLifetime = true,
-
-                        // установка ключа безопасности
-                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                        // валидация ключа безопасности
-                        ValidateIssuerSigningKey = true,
-                    };
-                });
+            })
+            .AddOAuthValidation();
 
             services.AddAutoMapper();
             
@@ -144,10 +157,6 @@ namespace site
                 SupportedCultures = supportedCultures,
                 SupportedUICultures = supportedCultures
             });
-
-            /*var options = new RewriteOptions()
-                .AddRewrite(@".*", "index", skipRemainingRules: false);
-            app.UseRewriter(options);*/
             
             app.UseResponseCompression();
 
@@ -167,21 +176,6 @@ namespace site
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
             });
-
-            //app.UseMvcWithDefaultRoute();
-
-            /*app.Use(async (context, next) =>
-            {
-                await next();
-            
-                if (context.Response.StatusCode == 404 &&
-                    !Path.HasExtension(context.Request.Path.Value) &&
-                    !context.Request.Path.Value.StartsWith("/api/"))
-                {
-                    context.Request.Path = "/index.html";
-                    await next();
-                }
-            });*/
         }
     }
 }
