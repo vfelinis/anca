@@ -121,7 +121,7 @@ namespace site.ApiControllers
                 claim.SetDestinations(destinations);
             }
 
-            ticket.SetAccessTokenLifetime(TimeSpan.FromSeconds(10));
+            ticket.SetAccessTokenLifetime(TimeSpan.FromHours(8));
 
             return ticket;
         }

@@ -22,8 +22,7 @@ export class AuthHttpInterceptor implements HttpInterceptor {
             return next.handle(clone).do(
                 success => {},
                 (error: HttpErrorResponse) => {
-                    if (error.status === 401 || error.status === 403) {
-                        debugger;
+                    if (error.status === 401) {
                         const userService = this.inj.get(UserService);
                         userService.unauthorized();
                     }

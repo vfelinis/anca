@@ -1,17 +1,16 @@
 <mat-toolbar color="primary" class="mat-elevation-z6">
 
-    <button mat-button routerLink="/">
-        <h1>
-            <mat-icon>public</mat-icon>
-            <span [appLocalize]="settings.companyName"></span>
-        </h1>
-    </button>
+    <a *ngIf="!!settings.logo" class="logo" routerLink="/">
+        <div [style.background-image]="'url(' + settings.logo + ')'"></div>
+    </a>
+    <a mat-button routerLink="/" [appLocalize]="settings.companyName" class="nav-title"></a>
 
     <!-- This fills the remaining space of the current row -->
     <!-- <span class="fill-remaining-space"></span> -->
     <div fxLayout="row" fxShow="false" fxShow.gt-sm class="fill-remaining-space">
         <button mat-button *ngFor="let page of Pages" routerLink="{{page.url}}">
             <span [appLocalize]="page.name"></span>
+            <mat-icon *ngIf="!page.active" matTooltip="{{inactiveTooltipMessage}}">info</mat-icon>
         </button>
         <div fxLayout="column" fxFlex.gt-sm="100%">
             <div fxFlexAlign="end">
@@ -44,9 +43,14 @@
 
 </mat-toolbar>
 <mat-menu #menu="matMenu">
-    <button mat-menu-item *ngFor="let page of Pages" routerLink="{{page.url}}" [appLocalize]="page.name">
+    <button mat-menu-item *ngFor="let page of Pages" routerLink="{{page.url}}">
+        <span [appLocalize]="page.name"></span>
+        <mat-icon *ngIf="!page.active" matTooltip="{{inactiveTooltipMessage}}" class="my-tooltip-parent">
+            info
+        </mat-icon>
     </button>
-    <button *ngIf="showSettings()" mat-button routerLink="settings" [appLocalize]="'Settings'">
+    <button *ngIf="showSettings()" mat-button routerLink="settings">
+        <span [appLocalize]="'Settings'"></span>
     </button>
     <div *ngIf="user.email; then profileMenu else loginMenu"></div>
     <ng-template #profileMenu>
@@ -62,6 +66,10 @@
 </mat-menu>
 
 <mat-menu #userMenu="matMenu">
-    <button *ngIf="isAdmin" mat-menu-item routerLink="admin" [appLocalize]="'Admin Panel'"></button>
-    <button mat-menu-item (click)="logout()" [appLocalize]="'Logout'"></button>
+    <button *ngIf="isAdmin" mat-menu-item routerLink="admin/configuration">
+        <span [appLocalize]="'Admin Panel'"></span>
+    </button>
+    <button mat-menu-item (click)="logout()">
+        <span [appLocalize]="'Logout'"></span>
+    </button>
 </mat-menu>

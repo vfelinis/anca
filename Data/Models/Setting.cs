@@ -10,6 +10,7 @@ namespace site.Data
         public int Id { get; set; }
         public string CompanyName { get; set; }
         public string DefaultLanguage { get; set; }
+        public string Logo { get; set; }
         public List<Culture> Cultures { get; set; }
         public Setting()
         {

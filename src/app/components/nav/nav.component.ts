@@ -9,6 +9,7 @@ import { SettingState } from '../../store/Setting';
 import { PageService } from '../../services/page/page.service';
 import { UserService } from '../../services/user/user.service';
 import { SettingService } from '../../services/setting/setting.service';
+import { LocalizationService } from '../../services/localization/localization.service';
 
 @Component({
   selector: 'app-nav',
@@ -21,15 +22,19 @@ export class NavComponent implements OnInit, OnDestroy {
   private settings: SettingState;
   private pages: Page[];
   private isAdmin: boolean;
+  private inactiveTooltipMessage: string;
   constructor(
     private pageService: PageService,
     private userService: UserService,
-    private settingsService: SettingService
+    private settingsService: SettingService,
+    private localizationService: LocalizationService
   ) {
     this.userService.getUser().takeUntil(this.ngUnsubscribe).subscribe(u => this.user = u);
     this.pageService.getPages().takeUntil(this.ngUnsubscribe).subscribe(p => this.pages = p);
     this.userService.isAdmin().takeUntil(this.ngUnsubscribe).subscribe(a => this.isAdmin = a);
     this.settingsService.getSettings().takeUntil(this.ngUnsubscribe).subscribe(s => this.settings = s);
+    this.localizationService.getLocalizedString('Inactive').takeUntil(this.ngUnsubscribe)
+      .subscribe(s => this.inactiveTooltipMessage = s);
   }
 
   get Pages(): Page[] {

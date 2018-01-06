@@ -7,6 +7,7 @@ export interface SettingState {
     id: number;
     companyName: string;
     defaultLanguage: string;
+    logo: string;
     languages: string[];
     supportedLanguages: string[];
 }
@@ -35,7 +36,13 @@ export const settingActionCreators = {
 
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
-const unloadedState: SettingState = { id: 0, companyName: '', defaultLanguage: '', languages: [], supportedLanguages: [] };
+const unloadedState: SettingState = {
+    id: 0, companyName: '',
+    defaultLanguage: '',
+    logo: '',
+    languages: [],
+    supportedLanguages: []
+};
 
 export function settingReducer(state: SettingState, action: KnownAction): SettingState {
     switch (action.type) {

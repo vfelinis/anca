@@ -7,7 +7,8 @@ import { CookieModule } from 'ngx-cookie';
 
 import { MatMenuModule, MatButtonModule, MatIconModule, MatCardModule,
   MatToolbarModule, MatDialogModule, MatFormFieldModule, MatInputModule,
-  MatCheckboxModule, MatTabsModule, MatExpansionModule, MatSelectModule } from '@angular/material';
+  MatCheckboxModule, MatTabsModule, MatExpansionModule, MatSelectModule,
+  MatTooltipModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
@@ -65,9 +66,9 @@ const initState = (window as any).initialReduxState as ApplicationState;
     ConfirmDialogComponent,
     ErrorComponent,
     UserSettingsComponent,
-    LocalizeDirective,
     ConfigurationComponent,
-    LocalizationComponent
+    LocalizationComponent,
+    LocalizeDirective
   ],
   imports: [
     BrowserModule,
@@ -94,6 +95,7 @@ const initState = (window as any).initialReduxState as ApplicationState;
     MatTabsModule,
     MatExpansionModule,
     MatSelectModule,
+    MatTooltipModule,
     FlexLayoutModule,
     FroalaEditorModule.forRoot(),
     FroalaViewModule.forRoot(),

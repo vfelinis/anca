@@ -1,5 +1,11 @@
 <mat-card>
   <form [formGroup]="configForm" (ngSubmit)="submit()" novalidate>
+    <mat-form-field class="logo-input">
+      <a (click)="logoInput.click()"><input matInput [formControl]="logo"></a>
+      <input #logoInput type="file" accept="image/jpeg,image/png" (change)="onFileInput($event)" style="display:none;" />
+      <mat-placeholder [appLocalize]="'New Logo'"></mat-placeholder>
+      <mat-icon matSuffix>folder</mat-icon>
+    </mat-form-field>
     <mat-form-field>
       <input matInput [formControl]="companyName">
       <mat-placeholder [appLocalize]="'Company Name'"></mat-placeholder>
@@ -14,7 +20,7 @@
       <mat-placeholder [appLocalize]="'Languages'"></mat-placeholder>
       <mat-error *ngIf="languages.invalid" [appLocalize]="getLanguagesMessage()"></mat-error>
     </mat-form-field>
-    <div>
+    <div class="min-margin">
       <button mat-raised-button color="primary" type="submit" [disabled]="notNeedSave()" [appLocalize]="'Save'">
       </button>
     </div>

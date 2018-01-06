@@ -14,6 +14,8 @@ namespace site.Models
         public string CompanyName { get; set; }
         [JsonProperty("defaultLanguage")]
         public string DefaultLanguage { get; set; }
+        [JsonProperty("logo")]
+        public string Logo { get; set; }
         [Required]
         [JsonProperty("languages")]
         public List<string> Languages { get; set; }

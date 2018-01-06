@@ -7,6 +7,7 @@ import { URLSearchParams } from '@angular/http';
 import jwt_decode from 'jwt-decode';
 import { ApplicationState } from '../../store';
 import { UserState, userActionCreators } from '../../store/User';
+import { LastExecutionState, lastExecutionActionCreators } from '../../store/LastExecution';
 import { setItemLS, getItemLS, removeItemLS, setItemSS, getItemSS, removeItemSS } from '../../utils/localStorageUtil';
 import 'rxjs/add/operator/map';
 
@@ -24,7 +25,11 @@ export class UserService {
     return this.store.select(s => s.userState);
   }
 
-  login(email: string, password: string, rememberMe: boolean) {
+  getLastExecution(): Observable<LastExecutionState> {
+    return this.store.select(s => s.lastExecutionState);
+  }
+
+  login(email: string, password: string, rememberMe: boolean, lastExecution: LastExecutionState) {
     const data = {
       grant_type: 'password',
       scope: 'openid email profile roles',
@@ -52,7 +57,21 @@ export class UserService {
         removeItemLS('user');
         setItemSS('user', userJSON);
       }
-      this.router.navigate(['/']);
+      if (!!lastExecution) {
+        lastExecution.stream.subscribe((d: any) => {
+          lastExecution.callback(d);
+          this.store.dispatch(lastExecutionActionCreators.cleanLastExecution());
+          this.router.navigate([lastExecution.returnUrl]);
+        },
+          (error: any) => {
+            console.log(error);
+            this.store.dispatch(lastExecutionActionCreators.cleanLastExecution());
+            this.router.navigate(['/']);
+          }
+        );
+      } else {
+        this.router.navigate(['/']);
+      }
     },
       (error: any) => console.log(error)
     );
