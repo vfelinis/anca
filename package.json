@@ -1,6 +1,6 @@
 {
-  "name": "site",
-  "version": "0.0.0",
+  "name": "anca",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",

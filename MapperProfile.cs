@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
 using AutoMapper;
-using site.Data;
-using site.Models;
+using anca.Data;
+using anca.Models;
 
-namespace site
+namespace anca
 {
     public class MapperProfile : Profile
     {

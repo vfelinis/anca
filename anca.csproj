@@ -3,7 +3,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <TypeScriptToolsVersion>latest</TypeScriptToolsVersion>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-    <UserSecretsId>aspnet-site-1D336D1B-EE7A-46D8-821D-E17D04A4E0D6</UserSecretsId>
+    <UserSecretsId>aspnet-anca-1D336D1B-EE7A-46D8-821D-E17D04A4E0D6</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <None Update="app.db" CopyToOutputDirectory="PreserveNewest" />

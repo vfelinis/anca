@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace site.Configuration
+namespace anca.Configuration
 {
     public class Host
     {

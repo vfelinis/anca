@@ -7,7 +7,7 @@
         {
             "taskName": "build",
             "args": [
-                "${workspaceRoot}/site.csproj"
+                "${workspaceRoot}/anca.csproj"
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"

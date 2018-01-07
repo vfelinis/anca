@@ -8,10 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using site.Data;
-using site.Services;
+using anca.Data;
+using anca.Services;
 
-namespace site.ApiControllers
+namespace anca.ApiControllers
 {
 
     [Route("api/locales")]

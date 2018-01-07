@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using site.Data;
-using site.Services;
+using anca.Data;
+using anca.Services;
 using Microsoft.AspNetCore.Http;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
@@ -22,10 +22,10 @@ using Microsoft.AspNetCore.ResponseCompression;
 using AutoMapper;
 using System.Text;
 using Microsoft.Extensions.Localization;
-using site.Data.Stores;
+using anca.Data.Stores;
 using AspNet.Security.OpenIdConnect.Primitives;
 
-namespace site
+namespace anca
 {
     public class Startup
     {

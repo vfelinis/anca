@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using site.Data.Stores;
-using site.Models;
+using anca.Data.Stores;
+using anca.Models;
 
-namespace site.Services
+namespace anca.Services
 {
     public class InitialReduxStateService: IInitialReduxStateService
     {

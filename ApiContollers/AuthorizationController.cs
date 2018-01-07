@@ -11,9 +11,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using OpenIddict.Core;
-using site.Data;
+using anca.Data;
 
-namespace site.ApiControllers
+namespace anca.ApiControllers
 {
     public class AuthorizationController : Controller
     {

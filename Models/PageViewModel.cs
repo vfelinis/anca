@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace site.Models
+namespace anca.Models
 {
     public class PageViewModel
     {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using site.Services;
+using anca.Services;
 
-namespace site.Services
+namespace anca.Services
 {
     public static class EmailSenderExtensions
     {

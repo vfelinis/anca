@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using site.Data;
-using site.Models;
-using site.Services;
+using anca.Data;
+using anca.Models;
+using anca.Services;
 
-namespace site.ApiControllers
+namespace anca.ApiControllers
 {
 
     [Route("api/settings")]

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace site.Data.Stores
+namespace anca.Data.Stores
 {
     public class PageStore: IPageStore
     {

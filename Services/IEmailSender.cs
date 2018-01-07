@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace site.Services
+namespace anca.Services
 {
     public interface IEmailSender
     {

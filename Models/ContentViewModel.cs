@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace site.Models
+namespace anca.Models
 {
     public class ContentViewModel
     {

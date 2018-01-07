@@ -11,10 +11,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using site.Configuration;
-using site.Data;
+using anca.Configuration;
+using anca.Data;
 
-namespace site
+namespace anca
 {
     public class Program
     {

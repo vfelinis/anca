@@ -14,12 +14,12 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using site.Data;
-using site.Models;
-using site.Models.AccountViewModels;
-using site.Services;
+using anca.Data;
+using anca.Models;
+using anca.Models.AccountViewModels;
+using anca.Services;
 
-namespace site.ApiControllers
+namespace anca.ApiControllers
 {
     [Authorize]
     public class AccountController : Controller

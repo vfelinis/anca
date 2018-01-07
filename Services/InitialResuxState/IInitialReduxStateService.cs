@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using site.Models;
+using anca.Models;
 
-namespace site.Services
+namespace anca.Services
 {
     public interface IInitialReduxStateService
     {

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using site.Models;
+using anca.Models;
 
-namespace site.Controllers
+namespace anca.Controllers
 {
     public class HomeController : Controller
     {

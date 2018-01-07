@@ -9,12 +9,12 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using site;
-using site.Data;
-using site.Models;
-using site.Services;
+using anca;
+using anca.Data;
+using anca.Models;
+using anca.Services;
 
-namespace site.ApiControllers
+namespace anca.ApiControllers
 {
     public class InitialStateController : Controller
     {

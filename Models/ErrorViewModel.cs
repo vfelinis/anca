@@ -1,6 +1,6 @@
 using System;
 
-namespace site.Models
+namespace anca.Models
 {
     public class ErrorViewModel
     {

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace site.Views.Manage
+namespace anca.Views.Manage
 {
     public static class ManageNavPages
     {

@@ -10,12 +10,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using site.Data;
-using site.Models;
-using site.Models.ManageViewModels;
-using site.Services;
+using anca.Data;
+using anca.Models;
+using anca.Models.ManageViewModels;
+using anca.Services;
 
-namespace site.Controllers
+namespace anca.Controllers
 {
     [Authorize]
     [Route("[controller]/[action]")]
@@ -496,7 +496,7 @@ namespace site.Controllers
         {
             return string.Format(
                 AuthenicatorUriFormat,
-                _urlEncoder.Encode("site"),
+                _urlEncoder.Encode("anca"),
                 _urlEncoder.Encode(email),
                 unformattedKey);
         }

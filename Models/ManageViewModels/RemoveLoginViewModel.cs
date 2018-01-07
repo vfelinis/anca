@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace site.Models.ManageViewModels
+namespace anca.Models.ManageViewModels
 {
     public class RemoveLoginViewModel
     {

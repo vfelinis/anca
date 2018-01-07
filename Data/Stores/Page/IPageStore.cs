@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace site.Data.Stores
+namespace anca.Data.Stores
 {
     public interface IPageStore
     {
