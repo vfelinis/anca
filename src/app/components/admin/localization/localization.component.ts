@@ -8,7 +8,7 @@ import { LocalizationService } from '../../../services/localization/localization
 
 interface Table {
   settings: any;
-  source: Array<any>;
+  source: LocalDataSource;
 }
 
 @Component({
@@ -18,19 +18,34 @@ interface Table {
 })
 export class LocalizationComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
-  private locale: LocaleState;
   private table: Table;
+  private data: Array<any>;
   constructor(
     private localizationService: LocalizationService
   ) {
-    this.localizationService.getLocale().takeUntil(this.ngUnsubscribe).subscribe(c => this.locale = c);
+    this.table = {
+      settings: {},
+      source: new LocalDataSource()
+    };
+    this.localizationService.getLocale().takeUntil(this.ngUnsubscribe)
+      .subscribe(c => this.table.source = this.getTableData(c.locales));
     this.localizationService.getLocale().takeUntil(this.ngUnsubscribe)
       .map(c => {
-        return {
-          settings: this.getTableSettings(c.locales),
-          source: this.getTableData(c.locales)
+        const settings = {
+          columnTitles: []
         };
-      }).subscribe(c => this.table = c);
+        this.localizationService.getLocalizedString('Add').subscribe(s => settings['add'] = s);
+        this.localizationService.getLocalizedString('Create').subscribe(s => settings['create'] = s);
+        this.localizationService.getLocalizedString('Cancel').subscribe(s => settings['cancel'] = s);
+        this.localizationService.getLocalizedString('Edit').subscribe(s => settings['edit'] = s);
+        this.localizationService.getLocalizedString('Save').subscribe(s => settings['save'] = s);
+        this.localizationService.getLocalizedString('Delete').subscribe(s => settings['delete'] = s);
+        const keys = Object.keys(c.locales);
+        keys.unshift('key');
+        keys.map(k => this.localizationService.getLocalizedString(k)
+          .subscribe(t => settings.columnTitles.push({ key: k, value: t})));
+        return settings;
+      }).subscribe(settings => this.table.settings = this.getTableSettings(settings));
   }
 
   ngOnInit() {
@@ -42,25 +57,37 @@ export class LocalizationComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
-  getTableSettings(locales: any) {
+  getTableSettings(data: any) {
     const settings = {
+      noDataMessage: '',
+      actions: {
+        columnTitle: ''
+      },
       add: {
+        addButtonContent: data.add,
+        createButtonContent: data.create,
+        cancelButtonContent: data.cancel,
         confirmCreate: true
       },
       edit: {
+        editButtonContent: data.edit,
+        saveButtonContent: data.save,
+        cancelButtonContent: data.cancel,
         confirmSave: true
       },
       delete: {
+        deleteButtonContent: data.delete,
         confirmDelete: true
       },
-      columns: {key: {title: 'key'}}
+      columns: {}
     };
-    Object.keys(locales).forEach(p => settings.columns[p] = {title: p});
+    data.columnTitles.forEach(p => settings.columns[p.key] = { title: p.value, filter: false });
     return settings;
   }
 
-  getTableData(locales: any): Array<any> {
-    const source = [];
+  getTableData(locales: any): LocalDataSource {
+    this.data = [];
+    const source = new LocalDataSource();
     const columns = [];
     let keys = [];
     Object.keys(locales).forEach(p => {
@@ -69,17 +96,18 @@ export class LocalizationComponent implements OnInit, OnDestroy {
     });
     keys = Array.from(new Set(keys));
     keys.forEach(k => {
-      const row = {key: k};
+      const row = { key: k };
       columns.forEach(c => {
         row[c] = locales[c][k];
       });
-      source.push(row);
+      source.add(row);
+      this.data.push(row);
     });
     return source;
   }
 
   onCreateConfirm(event) {
-    if (!!event.newData.key && !this.table.source.some(s => s.key ===  event.newData.key)) {
+    if (!!event.newData.key && !this.data.some(s => s.key === event.newData.key)) {
       this.localizationService.createResources(event.newData);
     }
   }
@@ -97,5 +125,13 @@ export class LocalizationComponent implements OnInit, OnDestroy {
 
   onDeleteConfirm(event) {
     this.localizationService.deleteResources(event.data.key);
+  }
+
+  onSearch(query: string = '') {
+    if (!!query) {
+      this.table.source.setFilter(Object.keys(this.table.source).map(k => Object.create({ field: k, search: query })), false);
+    } else {
+      this.table.source.reset();
+    }
   }
 }
