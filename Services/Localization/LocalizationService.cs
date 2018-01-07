@@ -149,7 +149,7 @@ namespace site.Services
             data.ForEach(c =>
             {
                 // protection from duplicates if there are they
-                var dict = c.Resources.GroupBy(r => r.Key).ToDictionary(x => x.Key, x => x.FirstOrDefault().Value);
+                var dict = c.Resources.ToDictionary(x => x.Key, x => x.Value);
                 result.Locales.Add(c.Language, dict);
             });
             return result;

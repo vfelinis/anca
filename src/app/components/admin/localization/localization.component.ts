@@ -32,17 +32,23 @@ export class LocalizationComponent implements OnInit, OnDestroy {
     this.localizationService.getLocale().takeUntil(this.ngUnsubscribe)
       .map(c => {
         const settings = {
+          add: 'Add',
+          create: 'Create',
+          cancel: 'Cancel',
+          edit: 'Edit',
+          save: 'Save',
+          delete: 'Delete',
           columnTitles: []
         };
-        this.localizationService.getLocalizedString('Add').subscribe(s => settings['add'] = s);
-        this.localizationService.getLocalizedString('Create').subscribe(s => settings['create'] = s);
-        this.localizationService.getLocalizedString('Cancel').subscribe(s => settings['cancel'] = s);
-        this.localizationService.getLocalizedString('Edit').subscribe(s => settings['edit'] = s);
-        this.localizationService.getLocalizedString('Save').subscribe(s => settings['save'] = s);
-        this.localizationService.getLocalizedString('Delete').subscribe(s => settings['delete'] = s);
+        this.localizationService.getLocalizedString('Add').takeUntil(this.ngUnsubscribe).subscribe(s => settings.add = s);
+        this.localizationService.getLocalizedString('Create').takeUntil(this.ngUnsubscribe).subscribe(s => settings.create = s);
+        this.localizationService.getLocalizedString('Cancel').takeUntil(this.ngUnsubscribe).subscribe(s => settings.cancel = s);
+        this.localizationService.getLocalizedString('Edit').takeUntil(this.ngUnsubscribe).subscribe(s => settings.edit = s);
+        this.localizationService.getLocalizedString('Save').takeUntil(this.ngUnsubscribe).subscribe(s => settings.save = s);
+        this.localizationService.getLocalizedString('Delete').takeUntil(this.ngUnsubscribe).subscribe(s => settings.delete = s);
         const keys = Object.keys(c.locales);
         keys.unshift('key');
-        keys.map(k => this.localizationService.getLocalizedString(k)
+        keys.map(k => this.localizationService.getLocalizedString(k).takeUntil(this.ngUnsubscribe)
           .subscribe(t => settings.columnTitles.push({ key: k, value: t})));
         return settings;
       }).subscribe(settings => this.table.settings = this.getTableSettings(settings));
@@ -129,7 +135,14 @@ export class LocalizationComponent implements OnInit, OnDestroy {
 
   onSearch(query: string = '') {
     if (!!query) {
-      this.table.source.setFilter(Object.keys(this.table.source).map(k => Object.create({ field: k, search: query })), false);
+      this.table.source.getAll().then((data: Array<any>) => {
+        if (data.length > 0) {
+          this.table.source.setFilter(
+            Object.keys(data[0]).map(k => Object.create({ field: k, search: query })),
+            false
+          );
+        }
+      });
     } else {
       this.table.source.reset();
     }

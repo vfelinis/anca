@@ -29,6 +29,9 @@ namespace site.Data
             builder.Entity<Page>()
                 .HasIndex(p => p.Url)
                 .IsUnique();
+            builder.Entity<Resource>()
+                .HasIndex(r => new {r.CultureId, r.Key})
+                .IsUnique();
         }
     }
 }
