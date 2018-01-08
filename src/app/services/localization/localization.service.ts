@@ -10,19 +10,22 @@ import { LastExecutionState, lastExecutionActionCreators } from '../../store/Las
 
 @Injectable()
 export class LocalizationService {
+  private localeState: Observable<LocaleState>;
   constructor(
     private store: Store<ApplicationState>,
     private http: HttpClient,
     private router: Router
-  ) { }
+  ) {
+    this.localeState = this.store.select(p => p.localeState);
+  }
 
   getLocale(): Observable<LocaleState> {
-    return this.store.select(p => p.localeState);
+    return this.localeState;
   }
 
   getLocalizedString(key: string): Observable<string> {
-    return this.store.select(s => s.localeState.locales[s.localeState.currentLanguage][key]
-      ? s.localeState.locales[s.localeState.currentLanguage][key]
+    return this.localeState.map(s => s.locales[s.currentLanguage][key]
+      ? s.locales[s.currentLanguage][key]
       : `${key}^`);
   }
 

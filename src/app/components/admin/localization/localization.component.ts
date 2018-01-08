@@ -29,8 +29,6 @@ export class LocalizationComponent implements OnInit, OnDestroy {
       source: new LocalDataSource()
     };
     this.localizationService.getLocale().takeUntil(this.ngUnsubscribe)
-      .subscribe(c => this.table.source = this.getTableData(c.locales));
-    const settings$ = this.localizationService.getLocale().takeUntil(this.ngUnsubscribe)
       .map(c => {
         const settings = {
           add: 'Add',
@@ -51,8 +49,12 @@ export class LocalizationComponent implements OnInit, OnDestroy {
         keys.unshift('key');
         keys.map(k => this.localizationService.getLocalizedString(k).takeUntil(this.ngUnsubscribe)
           .subscribe(t => settings.columnTitles.push({ key: k, value: t })));
-        return settings;
-      }).subscribe(settings => this.table.settings = this.getTableSettings(settings));
+        return {
+          settings: this.getTableSettings(settings),
+          source: this.getTableData(c.locales)
+        };
+      })
+      .subscribe(t => this.table = t);
   }
 
   ngOnInit() {
@@ -117,7 +119,7 @@ export class LocalizationComponent implements OnInit, OnDestroy {
   }
 
   onCreateConfirm(event) {
-    if (!!event.newData.key && !this.data.some(s => s.key === event.newData.key)) {
+    if (!!event.newData.key && !this.data.some(d => d.key === event.newData.key)) {
       this.localizationService.createResources(event.newData);
     }
   }
