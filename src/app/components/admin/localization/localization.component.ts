@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import 'rxjs/add/operator/takeUntil';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mergeMap';
 import { Subject } from 'rxjs/Subject';
 import { Ng2SmartTableModule, LocalDataSource } from 'ng2-smart-table';
 import { LocaleState, localeActionCreators } from '../../../store/Locale';
@@ -29,7 +30,7 @@ export class LocalizationComponent implements OnInit, OnDestroy {
     };
     this.localizationService.getLocale().takeUntil(this.ngUnsubscribe)
       .subscribe(c => this.table.source = this.getTableData(c.locales));
-    this.localizationService.getLocale().takeUntil(this.ngUnsubscribe)
+    const settings$ = this.localizationService.getLocale().takeUntil(this.ngUnsubscribe)
       .map(c => {
         const settings = {
           add: 'Add',
@@ -49,7 +50,7 @@ export class LocalizationComponent implements OnInit, OnDestroy {
         const keys = Object.keys(c.locales);
         keys.unshift('key');
         keys.map(k => this.localizationService.getLocalizedString(k).takeUntil(this.ngUnsubscribe)
-          .subscribe(t => settings.columnTitles.push({ key: k, value: t})));
+          .subscribe(t => settings.columnTitles.push({ key: k, value: t })));
         return settings;
       }).subscribe(settings => this.table.settings = this.getTableSettings(settings));
   }
@@ -65,6 +66,9 @@ export class LocalizationComponent implements OnInit, OnDestroy {
 
   getTableSettings(data: any) {
     const settings = {
+      pager: {
+        display: false
+      },
       noDataMessage: '',
       actions: {
         columnTitle: ''
@@ -123,6 +127,7 @@ export class LocalizationComponent implements OnInit, OnDestroy {
     Object.keys(event.newData).forEach(k => {
       needSave = needSave || event.newData[k] !== event.data[k];
     });
+    needSave = needSave && this.data.filter(d => d.key === event.newData.key || d.key === event.data.key).length === 1;
     if (needSave) {
       event.newData['oldKey'] = event.data['key'];
       this.localizationService.updateResources(event.newData);
