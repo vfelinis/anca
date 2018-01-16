@@ -29,6 +29,16 @@ export class LocalizationService {
       : `${key}^`);
   }
 
+  getLocalizedStringFromReadyState(locale: LocaleState, key: string): string {
+    if (!!locale) {
+      return locale.locales[locale.currentLanguage][key]
+        ? locale.locales[locale.currentLanguage][key]
+        : `${key}^`;
+    } else {
+      return `${key}^`;
+    }
+  }
+
   fetchLocale(onlyCurrentLanguage: boolean = false) {
     this.http.get(`api/locales/?onlyCurrentLanguage=${onlyCurrentLanguage}`).subscribe((data: LocaleState) => {
       this.store.dispatch(localeActionCreators.setLocale(data));
@@ -76,6 +86,7 @@ export class LocalizationService {
       returnUrl: this.router.url,
       callback: update
     };
+    this.store.dispatch(lastExecutionActionCreators.setLastExecution(lastExecution));
     stream.subscribe((data: any) => {
       update(data);
     },

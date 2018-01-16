@@ -7,11 +7,6 @@ import { Ng2SmartTableModule, LocalDataSource } from 'ng2-smart-table';
 import { LocaleState, localeActionCreators } from '../../../store/Locale';
 import { LocalizationService } from '../../../services/localization/localization.service';
 
-interface Table {
-  settings: any;
-  source: LocalDataSource;
-}
-
 @Component({
   selector: 'app-localization',
   templateUrl: './localization.component.html',
@@ -19,42 +14,33 @@ interface Table {
 })
 export class LocalizationComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
-  private table: Table;
+  private settings: any;
+  private source: LocalDataSource;
   private data: Array<any>;
   constructor(
     private localizationService: LocalizationService
   ) {
-    this.table = {
-      settings: {},
-      source: new LocalDataSource()
-    };
     this.localizationService.getLocale().takeUntil(this.ngUnsubscribe)
-      .map(c => {
+      .subscribe(state => {
         const settings = {
-          add: 'Add',
-          create: 'Create',
-          cancel: 'Cancel',
-          edit: 'Edit',
-          save: 'Save',
-          delete: 'Delete',
+          add: this.localizationService.getLocalizedStringFromReadyState(state, 'Add'),
+          create: this.localizationService.getLocalizedStringFromReadyState(state, 'Create'),
+          cancel: this.localizationService.getLocalizedStringFromReadyState(state, 'Cancel'),
+          edit: this.localizationService.getLocalizedStringFromReadyState(state, 'Edit'),
+          save: this.localizationService.getLocalizedStringFromReadyState(state, 'Save'),
+          delete: this.localizationService.getLocalizedStringFromReadyState(state, 'Delete'),
           columnTitles: []
         };
-        this.localizationService.getLocalizedString('Add').takeUntil(this.ngUnsubscribe).subscribe(s => settings.add = s);
-        this.localizationService.getLocalizedString('Create').takeUntil(this.ngUnsubscribe).subscribe(s => settings.create = s);
-        this.localizationService.getLocalizedString('Cancel').takeUntil(this.ngUnsubscribe).subscribe(s => settings.cancel = s);
-        this.localizationService.getLocalizedString('Edit').takeUntil(this.ngUnsubscribe).subscribe(s => settings.edit = s);
-        this.localizationService.getLocalizedString('Save').takeUntil(this.ngUnsubscribe).subscribe(s => settings.save = s);
-        this.localizationService.getLocalizedString('Delete').takeUntil(this.ngUnsubscribe).subscribe(s => settings.delete = s);
-        const keys = Object.keys(c.locales);
+        const keys = Object.keys(state.locales);
         keys.unshift('key');
-        keys.map(k => this.localizationService.getLocalizedString(k).takeUntil(this.ngUnsubscribe)
-          .subscribe(t => settings.columnTitles.push({ key: k, value: t })));
-        return {
-          settings: this.getTableSettings(settings),
-          source: this.getTableData(c.locales)
-        };
-      })
-      .subscribe(t => this.table = t);
+        keys.forEach(k => {
+          settings.columnTitles.push(
+            { key: k, value: this.localizationService.getLocalizedStringFromReadyState(state, k) }
+          );
+        });
+        this.settings = this.getTableSettings(settings);
+        this.source = this.getTableData(state.locales);
+      });
   }
 
   ngOnInit() {
@@ -142,16 +128,16 @@ export class LocalizationComponent implements OnInit, OnDestroy {
 
   onSearch(query: string = '') {
     if (!!query) {
-      this.table.source.getAll().then((data: Array<any>) => {
+      this.source.getAll().then((data: Array<any>) => {
         if (data.length > 0) {
-          this.table.source.setFilter(
+          this.source.setFilter(
             Object.keys(data[0]).map(k => Object.create({ field: k, search: query })),
             false
           );
         }
       });
     } else {
-      this.table.source.reset();
+      this.source.reset();
     }
   }
 }
