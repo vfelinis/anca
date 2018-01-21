@@ -13,9 +13,9 @@ import { LocalizationComponent } from './components/admin/localization/localizat
 import { LoginGuard } from './guards/login/login.guard';
 import { AdminGuard } from './guards/admin/admin.guard';
 
-import { ApplicationState } from './store/index';
+import { ApplicationState, getInitialState } from './store/index';
 
-const initState = (window as any).initialReduxState as ApplicationState;
+const initialState = getInitialState();
 
 const childRoutes: Routes = [
   { path: 'configuration', component: ConfigurationComponent},
@@ -25,8 +25,8 @@ const childRoutes: Routes = [
 
 const routes: Routes = [];
 
-if (initState && initState.pageState && initState.pageState.pages instanceof Array) {
-  initState.pageState.pages.sort((a, b) => a.orderIndex - b.orderIndex)
+if (initialState && initialState.pageState && initialState.pageState.pages instanceof Array) {
+  initialState.pageState.pages.sort((a, b) => a.orderIndex - b.orderIndex)
     .forEach(p => routes.push({ path: p.url,  component: ContentComponent }));
 }
 

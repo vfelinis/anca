@@ -5,7 +5,10 @@ import {
     ActionReducer,
     MetaReducer,
   } from '@ngrx/store';
-import * as fromRouter from '@ngrx/router-store';
+  import {
+    routerReducer,
+    RouterReducerState
+  } from '@ngrx/router-store';
 import { RouterStateUrl } from '../utils/routerUtil';
 import { contentReducer, ContentState } from './Content';
 import { pageReducer, PageState } from './Page';
@@ -14,9 +17,23 @@ import { userReducer, UserState } from './User';
 import { SettingState, settingReducer } from './Setting';
 import { LastExecutionState, lastExecutionReducer } from './LastExecution';
 
+const initState = (window as any).initialReduxState as ApplicationState;
+export function getInitialState() {
+  return {
+    ...initState,
+    routerState: <RouterReducerState<RouterStateUrl>>{
+      state: <RouterStateUrl>{
+        url: '/',
+        queryParams: {}
+      },
+      navigationId: 0
+    }
+  };
+}
+
 // The top-level state object
 export interface ApplicationState {
-    routerState: fromRouter.RouterReducerState<RouterStateUrl>;
+    routerState: RouterReducerState<RouterStateUrl>;
     contentState: ContentState;
     pageState: PageState;
     localeState: LocaleState;
@@ -29,7 +46,7 @@ export interface ApplicationState {
 // the reducer with the matching name. It's important that the names match exactly, and that the reducer
 // acts on the corresponding ApplicationState property type.
 export const reducers: ActionReducerMap<ApplicationState> = {
-    routerState: fromRouter.routerReducer,
+    routerState: routerReducer,
     contentState: contentReducer,
     pageState: pageReducer,
     localeState: localeReducer,

@@ -4,12 +4,14 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { URLSearchParams } from '@angular/http';
-import jwt_decode from 'jwt-decode';
+import * as jwt_decode from 'jwt-decode';
 import { ApplicationState } from '../../store';
 import { UserState, userActionCreators } from '../../store/User';
 import { LastExecutionState, lastExecutionActionCreators } from '../../store/LastExecution';
 import { setItemLS, getItemLS, removeItemLS, setItemSS, getItemSS, removeItemSS } from '../../utils/localStorageUtil';
 import 'rxjs/add/operator/map';
+
+export const _jwt_decode = jwt_decode as any;
 
 @Injectable()
 export class UserService {
@@ -41,7 +43,7 @@ export class UserService {
       .forEach(key => params.append(key, data[key]));
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     this.http.post('api/token', params.toString(), { headers: headers }).subscribe((res: any) => {
-      const userData = jwt_decode(res.id_token);
+      const userData = _jwt_decode(res.id_token);
       const user: UserState = {
         email: userData.email,
         username: userData.name,

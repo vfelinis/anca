@@ -24,6 +24,7 @@ using System.Text;
 using Microsoft.Extensions.Localization;
 using anca.Data.Stores;
 using AspNet.Security.OpenIdConnect.Primitives;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace anca
 {
@@ -32,7 +33,7 @@ namespace anca
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            
+
         }
 
         public IConfiguration Configuration { get; }
@@ -52,7 +53,8 @@ namespace anca
             });
 
             var connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationDbContext>(options => {
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
                 options.UseSqlite(connection);
                 options.UseOpenIddict();
             });
@@ -127,7 +129,7 @@ namespace anca
             .AddOAuthValidation();
 
             services.AddAutoMapper();
-            
+
             services.AddMvc()
                 .AddDataAnnotationsLocalization()
                 .AddViewLocalization();
@@ -147,7 +149,7 @@ namespace anca
             }
 
             var supportedLanguages = Configuration["SupportedLanguages"]?.Split(',')
-                .Select(s => s.Trim()).ToList() ?? new List<string>{"en"};
+                .Select(s => s.Trim()).ToList() ?? new List<string> { "en" };
             var defaultLanguage = supportedLanguages[0];
 
             var supportedCultures = supportedLanguages?.Select(c => new CultureInfo(c)).ToList();
@@ -157,12 +159,20 @@ namespace anca
                 SupportedCultures = supportedCultures,
                 SupportedUICultures = supportedCultures
             });
-            
+
             app.UseResponseCompression();
 
             app.UseDefaultFiles();
 
             app.UseStaticFiles();
+
+            if (!env.IsDevelopment())
+            {
+                app.UseForwardedHeaders(new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                });
+            }
 
             app.UseAuthentication();
 

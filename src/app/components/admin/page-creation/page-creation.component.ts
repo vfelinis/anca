@@ -10,11 +10,11 @@ import { PageService } from '../../../services/page/page.service';
   styleUrls: ['./page-creation.component.less']
 })
 export class PageCreationComponent implements OnInit {
-  private createForm: FormGroup;
-  private pageName: FormControl;
-  private pageUrl: FormControl;
-  private pageOrderIndex: FormControl;
-  private pageActive: FormControl;
+  public createForm: FormGroup;
+  public pageName: FormControl;
+  public pageUrl: FormControl;
+  public pageOrderIndex: FormControl;
+  public pageActive: FormControl;
   constructor(
     private dialogRef: MatDialogRef<PageCreationComponent>,
     private pageService: PageService

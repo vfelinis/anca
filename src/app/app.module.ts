@@ -17,9 +17,10 @@ import { StoreModule } from '@ngrx/store';
 import {
   StoreRouterConnectingModule,
   RouterStateSerializer,
+  RouterReducerState,
 } from '@ngrx/router-store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { reducers, ApplicationState } from './store';
+import { reducers, ApplicationState, getInitialState } from './store';
 import { CustomRouterStateSerializer } from './utils/routerUtil';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -51,8 +52,6 @@ import { ContentService } from './services/content/content.service';
 import { PageService } from './services/page/page.service';
 import { SettingService } from './services/setting/setting.service';
 
-const initState = (window as any).initialReduxState as ApplicationState;
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -79,7 +78,7 @@ const initState = (window as any).initialReduxState as ApplicationState;
     AppRoutingModule,
     CookieModule.forRoot(),
 
-    StoreModule.forRoot(reducers, {initialState: initState}),
+    StoreModule.forRoot(reducers, { initialState: getInitialState }),
     StoreRouterConnectingModule,
     !environment.production ? StoreDevtoolsModule.instrument() : [],
 

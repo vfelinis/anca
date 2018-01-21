@@ -19,9 +19,9 @@ export class ContentComponent implements OnInit, OnDestroy {
   private content: ContentState;
   private currentLanguage: string;
   private editableText: string;
-  private page: Page;
-  private isAdmin: boolean;
   private isEdit = false;
+  public page: Page;
+  public isAdmin: boolean;
   constructor(
     private contentService: ContentService,
     private pageService: PageService,

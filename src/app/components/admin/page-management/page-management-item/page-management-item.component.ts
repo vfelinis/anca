@@ -16,10 +16,10 @@ export class PageManagementItemComponent implements OnInit, OnDestroy {
   @Output() onSave = new EventEmitter<UpdatedPage>();
   @Output() onDelete = new EventEmitter<number>();
   @Input() page = <Page>null;
-  private pageName: FormControl;
-  private pageUrl: FormControl;
-  private pageOrderIndex: FormControl;
-  private pageActive: FormControl;
+  public pageName: FormControl;
+  public pageUrl: FormControl;
+  public pageOrderIndex: FormControl;
+  public pageActive: FormControl;
   constructor(private dialog: MatDialog) {}
 
   ngOnInit() {

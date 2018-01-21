@@ -15,10 +15,10 @@ import { LocalizationService } from '../../services/localization/localization.se
 })
 export class UserSettingsComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
-  private settingsForm: FormGroup;
-  private languages: FormControl;
-  private settings: SettingState;
   private currentLanguage: string;
+  public settingsForm: FormGroup;
+  public languages: FormControl;
+  public settings: SettingState;
   constructor(
     private cookieService: CookieService,
     private settingService: SettingService,

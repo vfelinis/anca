@@ -14,9 +14,9 @@ import { LocalizationService } from '../../../services/localization/localization
 })
 export class LocalizationComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
-  private settings: any;
-  private source: LocalDataSource;
   private data: Array<any>;
+  public settings: any;
+  public source: LocalDataSource;
   constructor(
     private localizationService: LocalizationService
   ) {

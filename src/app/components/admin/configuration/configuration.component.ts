@@ -14,12 +14,12 @@ import { SettingService } from '../../../services/setting/setting.service';
 })
 export class ConfigurationComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
-  private configForm: FormGroup;
-  private logo: FormControl;
-  private companyName: FormControl;
-  private languages: FormControl;
-  private settings: SettingState;
   private newLogo: string;
+  public configForm: FormGroup;
+  public logo: FormControl;
+  public companyName: FormControl;
+  public languages: FormControl;
+  public settings: SettingState;
   constructor(
     private cookieService: CookieService,
     private settingsService: SettingService

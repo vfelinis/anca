@@ -14,11 +14,11 @@ import { LastExecutionState } from '../../store/LastExecution';
 export class LoginComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
   private lastExecution: LastExecutionState;
-  private loginForm: FormGroup;
-  private email: FormControl;
-  private password: FormControl;
-  private rememberMe: FormControl;
-  private hide = true;
+  public loginForm: FormGroup;
+  public email: FormControl;
+  public password: FormControl;
+  public rememberMe: FormControl;
+  public hide = true;
   constructor(
     private userService: UserService
   ) {

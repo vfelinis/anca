@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnChanges, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/takeUntil';
 import 'rxjs/add/operator/map';
@@ -16,13 +16,13 @@ import { LocalizationService } from '../../services/localization/localization.se
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.less']
 })
-export class NavComponent implements OnInit, OnDestroy {
+export class NavComponent implements OnInit, OnChanges, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
-  public user: UserState;
-  private settings: SettingState;
   private pages: Page[];
-  private isAdmin: boolean;
   private inactiveTooltipMessage: string;
+  public user: UserState;
+  public settings: SettingState;
+  public isAdmin: boolean;
   constructor(
     private pageService: PageService,
     private userService: UserService,
@@ -41,7 +41,11 @@ export class NavComponent implements OnInit, OnDestroy {
     return this.pages.filter(m => m.active || this.user.role.some(r => r === 'admin'));
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    document.querySelector('title').innerText = this.settings.companyName;
+  }
+
+  ngOnChanges() { }
 
   ngOnDestroy() {
     this.ngUnsubscribe.next();

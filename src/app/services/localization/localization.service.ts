@@ -24,7 +24,7 @@ export class LocalizationService {
   }
 
   getLocalizedString(key: string): Observable<string> {
-    return this.localeState.map(s => s.locales[s.currentLanguage][key]
+    return this.localeState.map(s => s.locales[s.currentLanguage] && s.locales[s.currentLanguage][key]
       ? s.locales[s.currentLanguage][key]
       : `${key}^`);
   }

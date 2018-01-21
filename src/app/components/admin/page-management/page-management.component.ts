@@ -13,7 +13,7 @@ import { PageCreationComponent } from '../page-creation/page-creation.component'
 })
 export class PageManagementComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
-  private pages: Page[];
+  public pages: Page[];
   constructor(
     private dialog: MatDialog,
     private pageService: PageService
